@@ -1,0 +1,10 @@
+{
+	"require": {
+		"slim/slim": "2.*",
+		"doctrine/orm": "2.5.*",
+		"doctrine/migrations": "1.1.*"
+	},
+	"config": {
+		"vendor-dir": "Vendor"
+	}
+}
