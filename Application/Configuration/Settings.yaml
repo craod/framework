@@ -1,0 +1,24 @@
+Craod:
+  Api:
+    database:
+      settings:
+        dbname: 'craod'
+        user: 'craod'
+        password: '123'
+        host: 'localhost'
+        driver: 'pdo_pgsql'
+    doctrine:
+      types:
+        jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
+    cache:
+      scheme: 'tcp'
+      host: '127.0.0.1'
+      port: 6379
+    cli:
+      commands:
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand'
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand'
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand'
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand'
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
+        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'

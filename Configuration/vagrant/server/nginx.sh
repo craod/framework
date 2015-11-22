@@ -10,16 +10,17 @@ service nginx stop
 cat << EOF > /etc/nginx/conf.d/craod.conf
 server {
 	listen 80;
-	index index.php;
+	index api.php;
 	server_name api.craod.dev;
-	root '/var/www/Api/';
-	try_files \$uri \$uri/ /index.php?\$query_string;
+	error_log /var/www/Logs/nginx/access.log;
+	root '/var/www/Application/';
+	try_files \$uri \$uri/ /api.php?\$query_string;
 
 	rewrite_log on;
 
 	location ~ \.php {
 		fastcgi_pass 127.0.0.1:9000;
-		fastcgi_index /index.php;
+		fastcgi_index /api.php;
 
 		include /etc/nginx/fastcgi_params;
 

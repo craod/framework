@@ -1,0 +1,13 @@
+#!/usr/bin/php
+<?php
+
+require_once 'Classes/Craod/Api/Core/Bootstrap.php';
+
+use Craod\Api\Core\Bootstrap;
+use Craod\Api\Core\Cli;
+
+Bootstrap::initialize();
+Bootstrap::loadDependencyInjector();
+Bootstrap::loadConfiguration();
+Bootstrap::initializeDatabase();
+Bootstrap::run(Cli::class);

@@ -1,0 +1,4 @@
+name: 'Craod database migrations'
+migrations_namespace: 'Craod\Api\Migrations'
+table_name: 'doctrine_migration_versions'
+migrations_directory: 'Application/Classes/Craod/Api/Migrations'
