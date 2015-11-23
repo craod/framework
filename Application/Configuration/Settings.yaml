@@ -10,10 +10,15 @@ Craod:
     doctrine:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
+        password: 'Cpliakas\Password\Doctrine\PasswordType'
     cache:
-      scheme: 'tcp'
-      host: '127.0.0.1'
-      port: 6379
+      settings:
+        scheme: 'tcp'
+        host: '127.0.0.1'
+        port: 6379
+    rest:
+      settings:
+        debug: false
     cli:
       commands:
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand'
@@ -22,3 +27,4 @@ Craod:
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand'
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
+        - 'Craod\Api\Cli\Command\Cache\FlushCommand'

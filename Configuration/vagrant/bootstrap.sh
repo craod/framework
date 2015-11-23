@@ -7,6 +7,7 @@ rm -rf /var/www
 ln -fs /vagrant /var/www
 
 BOOTSTRAPPER=1
+CRAOD_CONTEXT="development"
 
 apt-get -qq update
 apt-get -qq upgrade

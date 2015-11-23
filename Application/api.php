@@ -3,7 +3,12 @@
 require_once 'Classes/Craod/Api/Core/Bootstrap.php';
 
 use Craod\Api\Core\Bootstrap;
-use Craod\Api\Core\Api;
+use Craod\Api\Rest\Application;
+
 
 Bootstrap::initialize();
-Bootstrap::run(Api::class);
+Bootstrap::loadDependencyInjector();
+Bootstrap::loadConfiguration();
+Bootstrap::initializeCache();
+Bootstrap::initializeDatabase();
+Bootstrap::run(Application::class);

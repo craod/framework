@@ -1,6 +1,4 @@
 .idea
 .token
-node_modules
 .vagrant
-npm-debug.log
 Application/Vendor

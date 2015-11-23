@@ -2,7 +2,7 @@
 
 namespace Craod\Api\Core;
 
-interface ApplicationInterface {
+interface Application {
 
 	const DEVELOPMENT = 'development';
 	const STAGING = 'staging';
@@ -13,7 +13,7 @@ interface ApplicationInterface {
 	 *
 	 * @return void
 	 */
-	public function initialize ();
+	public function initialize();
 
 	/**
 	 * Run the application

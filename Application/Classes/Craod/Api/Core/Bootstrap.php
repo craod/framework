@@ -5,10 +5,13 @@ namespace Craod\Api\Core;
 use Craod\Api\Utility\DependencyInjector;
 use Craod\Api\Utility\Settings;
 
-use Doctrine\Common\Cache\RedisCache;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\PredisCache;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 use Symfony\Component\ClassLoader\Psr4ClassLoader;
 
@@ -24,7 +27,7 @@ class Bootstrap {
 	const MODEL_PROXY_PATH = self::ROOT_PATH . 'Classes/Craod/Api/Proxy';
 
 	/**
-	 * @var ApplicationInterface
+	 * @var Application
 	 */
 	protected static $application;
 
@@ -48,8 +51,13 @@ class Bootstrap {
 	 *
 	 * @return string
 	 */
-	public static function getContext () {
-		return ApplicationInterface::DEVELOPMENT;
+	public static function getContext() {
+		$environment = getenv('CRAOD_CONTEXT');
+		if ($environment === FALSE) {
+			return Application::DEVELOPMENT;
+		} else {
+			return $environment;
+		}
 	}
 
 	/**
@@ -57,7 +65,7 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public static function initialize () {
+	public static function initialize() {
 		error_reporting(E_ALL);
 		require_once self::ROOT_PATH . 'Vendor/autoload.php';
 		self::$classLoader = new Psr4ClassLoader();
@@ -70,7 +78,7 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public static function loadConfiguration () {
+	public static function loadConfiguration() {
 		Settings::initialize();
 	}
 
@@ -79,7 +87,7 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public static function loadDependencyInjector () {
+	public static function loadDependencyInjector() {
 		DependencyInjector::initialize();
 	}
 
@@ -89,8 +97,11 @@ class Bootstrap {
 	 * @return void
 	 */
 	public static function initializeCache() {
-		self::$cache = new \Predis\Client(Settings::get('Craod.Api.cache'));
+		self::$cache = new \Predis\Client(Settings::get('Craod.Api.cache.settings'));
 		DependencyInjector::set('cache', self::$cache);
+		if (Settings::get('Craod.Api.cache.disable')) {
+			self::$cache->flushall();
+		}
 	}
 
 	/**
@@ -98,15 +109,21 @@ class Bootstrap {
 	 *
 	 * @throws \Doctrine\ORM\ORMException
 	 */
-	public static function initializeDatabase () {
-		$cache = new RedisCache();
+	public static function initializeDatabase() {
+		$driver = new AnnotationDriver(new AnnotationReader(), [self::MODEL_PATH]);
+		AnnotationRegistry::registerLoader('class_exists');
+
 		$configuration = new Configuration();
-		$configuration->setMetadataCacheImpl($cache);
-		$configuration->setMetadataDriverImpl($configuration->newDefaultAnnotationDriver(self::MODEL_PATH));
-		$configuration->setQueryCacheImpl($cache);
+		$configuration->setMetadataDriverImpl($driver);
 		$configuration->setProxyDir(self::MODEL_PROXY_PATH);
 		$configuration->setProxyNamespace('Craod\Api\Proxy');
 		$configuration->setAutoGenerateProxyClasses(TRUE);
+
+		if (self::$cache !== NULL) {
+			$cache = new PredisCache(self::$cache);
+			$configuration->setMetadataCacheImpl($cache);
+			$configuration->setQueryCacheImpl($cache);
+		}
 
 		$parameters = Settings::get('Craod.Api.database.settings');
 
@@ -127,7 +144,7 @@ class Bootstrap {
 	 * @param string $classPath
 	 * @return boolean
 	 */
-	public static function run ($classPath) {
+	public static function run($classPath) {
 		if (!class_exists($classPath)) {
 			return FALSE;
 		} else {

@@ -24,7 +24,7 @@ class DependencyInjector {
 	 *
 	 * @return void
 	 */
-	public static function initialize () {
+	public static function initialize() {
 		$builder = new ContainerBuilder();
 		self::$container = $builder->build();
 	}
@@ -36,7 +36,7 @@ class DependencyInjector {
 	 * @return mixed
 	 * @throws \DI\NotFoundException
 	 */
-	public static function get ($name) {
+	public static function get($name) {
 		return self::$container->get($name);
 	}
 
@@ -47,7 +47,7 @@ class DependencyInjector {
 	 * @param mixed $value
 	 * @return void
 	 */
-	public static function set ($name, $value) {
+	public static function set($name, $value) {
 		self::$container->set($name, $value);
 	}
 
@@ -57,7 +57,7 @@ class DependencyInjector {
 	 * @param string $name
 	 * @return boolean
 	 */
-	public static function has ($name) {
+	public static function has($name) {
 		return self::$container->has($name);
 	}
 
@@ -66,7 +66,7 @@ class DependencyInjector {
 	 *
 	 * @return Container
 	 */
-	public static function getContainer () {
+	public static function getContainer() {
 		return self::$container;
 	}
 }

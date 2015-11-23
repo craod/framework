@@ -29,7 +29,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public static function initialize () {
+	public static function initialize() {
 		self::loadBundle(self::DEFAULT_BUNDLE);
 	}
 
@@ -39,7 +39,7 @@ class Settings {
 	 * @param string $bundle
 	 * @return void
 	 */
-	public static function loadBundle ($bundle) {
+	public static function loadBundle($bundle) {
 		self::parseForBundle($bundle);
 	}
 
@@ -63,7 +63,7 @@ class Settings {
 	 * @param string $bundle
 	 * @return void
 	 */
-	public static function parseForBundle ($bundle) {
+	public static function parseForBundle($bundle) {
 		$pattern = realpath(self::SETTINGS_ROOT_PATH) . '/{,' . ucfirst(Bootstrap::getContext()) . '/}' . $bundle . '{,.*}.yaml';
 		foreach (glob($pattern, GLOB_BRACE) as $filename) {
 			self::loadFileIntoBundle($filename, $bundle);
@@ -77,7 +77,7 @@ class Settings {
 	 * @return array
 	 * @throws InvalidSettingsBundleException
 	 */
-	public static function getLoadedData ($bundle) {
+	public static function getLoadedData($bundle) {
 		if (!isset(self::$settings[$bundle])) {
 			throw new InvalidSettingsBundleException('Settings bundle is not set: ' . $bundle, 1448160231);
 		}
@@ -91,7 +91,7 @@ class Settings {
 	 * @param string $bundle
 	 * @return boolean
 	 */
-	public static function settingExists ($setting, $bundle = self::DEFAULT_BUNDLE) {
+	public static function settingExists($setting, $bundle = self::DEFAULT_BUNDLE) {
 		$settingParts = explode('.', $bundle . '.' . $setting);
 		$data = self::$settings;
 		foreach ($settingParts as $part) {
@@ -113,7 +113,7 @@ class Settings {
 	 * @param string $bundle
 	 * @return mixed
 	 */
-	public static function get ($setting, $default = NULL, $bundle = self::DEFAULT_BUNDLE) {
+	public static function get($setting, $default = NULL, $bundle = self::DEFAULT_BUNDLE) {
 		$settingParts = explode('.', $bundle . '.' . $setting);
 		$data = self::$settings;
 		foreach ($settingParts as $part) {

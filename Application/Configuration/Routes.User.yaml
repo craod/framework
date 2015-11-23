@@ -1,0 +1,4 @@
+'/v1/user':
+  controller: 'Craod\Api\Rest\Controller\UserController'
+  actions:
+    get: 'getUsers'

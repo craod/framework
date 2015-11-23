@@ -28,4 +28,20 @@ class Exception extends \Exception implements \JsonSerializable {
 			'trace' => $this->getTrace()
 		];
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getData() {
+		return $this->data;
+	}
+
+	/**
+	 * @param array $data
+	 * @return Exception
+	 */
+	public function setData($data) {
+		$this->data = $data;
+		return $this;
+	}
 }

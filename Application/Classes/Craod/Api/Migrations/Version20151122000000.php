@@ -13,27 +13,32 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20151122000000 extends AbstractMigration {
 
 	/**
+	 * Create the user table
+	 *
 	 * @param Schema $schema
+	 * @return void
 	 */
-	public function up (Schema $schema) {
+	public function up(Schema $schema) {
 		$table = $schema->createTable('users');
 		$table->addColumn('guid', 'guid', ['unique' => TRUE]);
 		$table->addColumn('created', 'datetimetz');
-		$table->addColumn('deleted', 'boolean');
+		$table->addColumn('active', 'boolean');
 		$table->addColumn('username', 'string', ['unique' => TRUE]);
 		$table->addColumn('password', 'string');
 		$table->addColumn('firstname', 'string');
 		$table->addColumn('lastname', 'string');
 		$table->addColumn('settings', 'jsonb');
 		$table->setPrimaryKey(['guid']);
-		$table->addIndex(['username'], 'username_index');
+		$table->addUniqueIndex(['username'], 'username_unique');
 		$table->addIndex(['firstname', 'lastname'], 'fullname_index');
 	}
 
 	/**
+	 * Remove the user table
+	 *
 	 * @param Schema $schema
 	 */
-	public function down (Schema $schema) {
+	public function down(Schema $schema) {
 		$schema->dropTable('users');
 	}
 }

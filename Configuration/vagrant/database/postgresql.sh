@@ -17,6 +17,7 @@ apt-get -qq install -y postgresql-9.4
 sudo -i -u postgres <<EOF
 psql -c "CREATE USER craod PASSWORD '123';"
 psql -c "CREATE DATABASE craod;"
+psql -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
 exit
 EOF
 
