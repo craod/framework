@@ -28,3 +28,5 @@ Craod:
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
         - 'Craod\Api\Cli\Command\Cache\FlushCommand'
+      fixtures:
+        user: 'Craod\Api\Cli\Fixture\UserFixture'

@@ -65,7 +65,7 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public static function initialize() {
+	public static function initializeClassLoader() {
 		error_reporting(E_ALL);
 		require_once self::ROOT_PATH . 'Vendor/autoload.php';
 		self::$classLoader = new Psr4ClassLoader();

@@ -54,7 +54,7 @@ class Settings {
 		if (!isset(self::$settings[$bundle])) {
 			self::$settings[$bundle] = [];
 		}
-		self::$settings[$bundle] = array_replace_recursive(self::$settings[$bundle], Yaml::parse(file_get_contents($filename)));
+		self::$settings[$bundle] = Arrays::merge(self::$settings[$bundle], Yaml::parse(file_get_contents($filename)));
 	}
 
 	/**
