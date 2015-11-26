@@ -2,10 +2,9 @@
 
 namespace Craod\Api\Model;
 
-use Doctrine\DBAL\Driver\PDOException;
-use Doctrine\ORM\Mapping as ORM;
+use Craod\Api\Utility\Database;
 
-use Craod\Api\Utility\DependencyInjector;
+use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -52,8 +51,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @return AbstractEntity
 	 */
 	public function save() {
-		/** @var EntityManager $entityManager */
-		$entityManager = DependencyInjector::get('entityManager');
+		$entityManager = Database::getEntityManager();
 		$entityManager->persist($this);
 		$entityManager->flush();
 		return $this;
@@ -65,8 +63,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @return void
 	 */
 	public function delete() {
-		/** @var EntityManager $entityManager */
-		$entityManager = DependencyInjector::get('entityManager');
+		$entityManager = Database::getEntityManager();
 		$entityManager->remove($this);
 		$entityManager->flush();
 	}
@@ -78,8 +75,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		$value = [];
-		/** @var EntityManager $entityManager */
-		$entityManager = DependencyInjector::get('entityManager');
+		$entityManager = Database::getEntityManager();
 		$metadata = $entityManager->getClassMetadata(get_called_class());
 		foreach ($metadata->getReflectionProperties() as $property => $reflectionProperty) {
 			$getterMethodName = 'get' . ucfirst($property);
@@ -105,7 +101,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 */
 	public static function getRepository() {
 		/** @var EntityManager $entityManager */
-		$entityManager = DependencyInjector::get('entityManager');
+		$entityManager = Database::getEntityManager();
 		return $entityManager->getRepository(get_called_class());
 	}
 

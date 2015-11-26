@@ -10,7 +10,7 @@ use DI\Container;
  *
  * @package Craod\Api\Utility
  */
-class DependencyInjector {
+class DependencyInjector implements AbstractUtility {
 
 	/**
 	 * The actual DI container
@@ -27,6 +27,24 @@ class DependencyInjector {
 	public static function initialize() {
 		$builder = new ContainerBuilder();
 		self::$container = $builder->build();
+	}
+
+	/**
+	 * Checks whether we have built a container yet, which happens at initialization
+	 *
+	 * @return boolean
+	 */
+	public static function isInitialized() {
+		return self::$container !== NULL;
+	}
+
+	/**
+	 * This utility has no dependencies
+	 *
+	 * @return array
+	 */
+	public static function getRequiredUtilities() {
+		return [];
 	}
 
 	/**

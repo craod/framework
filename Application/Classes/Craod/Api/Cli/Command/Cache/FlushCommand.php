@@ -2,7 +2,8 @@
 
 namespace Craod\Api\Cli\Command\Cache;
 
-use Craod\Api\Utility\DependencyInjector;
+use Craod\Api\Utility\Cache;
+use Craod\Api\Utility\File;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,14 +50,12 @@ EOT
 	 */
 	public function execute(InputInterface $input, OutputInterface $output) {
 		$key = $input->getArgument('key');
-		/** @var \Predis\Client $cache */
-		$cache = DependencyInjector::get('cache');
 		if ($key === NULL) {
 			$output->write('<comment>Flushing all cache keys...</comment> ');
-			$cache->flushall();
+			Cache::clear();
 		} else {
 			$output->write('<comment>Flushing cache key <info>' . $key . '</info>...</comment> ');
-			$cache->set($key, NULL, 0);
+			Cache::clear($key);
 		}
 		$output->writeln('<info>Complete</info>');
 	}

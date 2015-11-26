@@ -11,11 +11,6 @@ Craod:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
         password: 'Cpliakas\Password\Doctrine\PasswordType'
-    cache:
-      settings:
-        scheme: 'tcp'
-        host: '127.0.0.1'
-        port: 6379
     rest:
       settings:
         debug: false

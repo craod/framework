@@ -2,7 +2,7 @@
 
 namespace Craod\Api\Cli;
 
-use Craod\Api\Utility\DependencyInjector;
+use Craod\Api\Utility\Database;
 use Craod\Api\Utility\Settings;
 use Craod\Api\Core\Application as CraodApplication;
 use Doctrine\DBAL\Migrations\Tools\Console\Command as DoctrineCommand;
@@ -33,7 +33,7 @@ class Cli extends CliApplication implements CraodApplication {
 	 */
 	public function initialize() {
 		$helperSet = new HelperSet([
-			'db' => new ConnectionHelper(DependencyInjector::get('database')),
+			'db' => new ConnectionHelper(Database::getConnection()),
 			'dialog' => new DialogHelper(),
 		]);
 

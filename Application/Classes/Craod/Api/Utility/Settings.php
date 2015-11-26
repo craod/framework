@@ -22,7 +22,7 @@ class Settings {
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $settings;
 
 	/**
 	 * Parse the configuration files for the current context
@@ -30,7 +30,26 @@ class Settings {
 	 * @return void
 	 */
 	public static function initialize() {
+		self::$settings = [];
 		self::loadBundle(self::DEFAULT_BUNDLE);
+	}
+
+	/**
+	 * Checks whether this utility has been initialized
+	 *
+	 * @return boolean
+	 */
+	public static function isInitialized() {
+		return is_array(self::$settings);
+	}
+
+	/**
+	 * This utility has no dependencies
+	 *
+	 * @return array
+	 */
+	public static function getRequiredUtilities() {
+		return [];
 	}
 
 	/**
@@ -44,20 +63,6 @@ class Settings {
 	}
 
 	/**
-	 * Load the given bundle, search the configuration folder for the given bundle files
-	 *
-	 * @param string $filename
-	 * @param string $bundle
-	 * @return void
-	 */
-	public static function loadFileIntoBundle($filename, $bundle) {
-		if (!isset(self::$settings[$bundle])) {
-			self::$settings[$bundle] = [];
-		}
-		self::$settings[$bundle] = Arrays::merge(self::$settings[$bundle], Yaml::parse(file_get_contents($filename)));
-	}
-
-	/**
 	 * Parse the given folder for configuration files for the given bundle
 	 *
 	 * @param string $bundle
@@ -68,6 +73,30 @@ class Settings {
 		foreach (glob($pattern, GLOB_BRACE) as $filename) {
 			self::loadFileIntoBundle($filename, $bundle);
 		}
+	}
+
+	/**
+	 * Load the given bundle, search the configuration folder for the given bundle files
+	 *
+	 * @param string $filename
+	 * @param string $bundle
+	 * @return void
+	 */
+	public static function loadFileIntoBundle($filename, $bundle) {
+		if (!isset(self::$settings[$bundle])) {
+			self::$settings[$bundle] = [];
+		}
+		self::$settings[$bundle] = Arrays::merge(self::$settings[$bundle], self::loadFile($filename));
+	}
+
+	/**
+	 * Load the given file and parse it into yaml
+	 *
+	 * @param string $filename
+	 * @return array
+	 */
+	public static function loadFile($filename) {
+		return Yaml::parse(File::getContents($filename));
 	}
 
 	/**

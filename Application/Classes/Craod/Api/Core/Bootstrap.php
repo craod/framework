@@ -2,18 +2,9 @@
 
 namespace Craod\Api\Core;
 
-use Craod\Api\Utility\DependencyInjector;
-use Craod\Api\Utility\Settings;
-
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Cache\PredisCache;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-
+use Craod\Api\Utility as Utility;
 use Symfony\Component\ClassLoader\Psr4ClassLoader;
+use Craod\Api\Exception\UtilityInitializationException;
 
 /**
  * Class Bootstrap
@@ -22,9 +13,12 @@ use Symfony\Component\ClassLoader\Psr4ClassLoader;
  */
 class Bootstrap {
 
+	const DEPENDENCY_INJECTOR = Utility\DependencyInjector::class;
+	const CACHE = Utility\Cache::class;
+	const DATABASE = Utility\Database::class;
+	const CONFIGURATION = Utility\Settings::class;
+
 	const ROOT_PATH = __DIR__  . '/../../../../';
-	const MODEL_PATH = self::ROOT_PATH . 'Classes/Craod/Api/Model';
-	const MODEL_PROXY_PATH = self::ROOT_PATH . 'Classes/Craod/Api/Proxy';
 
 	/**
 	 * @var Application
@@ -37,14 +31,9 @@ class Bootstrap {
 	protected static $classLoader;
 
 	/**
-	 * @var \Predis\Client
+	 * @var array
 	 */
-	protected static $cache;
-
-	/**
-	 * @var EntityManager
-	 */
-	protected static $entityManager;
+	protected static $loadedUtilities;
 
 	/**
 	 * Get the current application context
@@ -61,6 +50,30 @@ class Bootstrap {
 	}
 
 	/**
+	 * Initialize the bootstrapper, optionally initializing the requested utilities in the order in which they are requested
+	 *
+	 * @param array $utilities
+	 * @return void
+	 * @throws UtilityInitializationException
+	 */
+	public static function initialize($utilities = []) {
+		self::initializeClassLoader();
+		self::$loadedUtilities = [];
+		foreach ($utilities as $utility) {
+			$utilityClassName = $utility;
+			/** @var Utility\AbstractUtility $utility */
+			foreach ($utility::getRequiredUtilities() as $requiredUtility) {
+				if (!in_array($requiredUtility, self::$loadedUtilities)) {
+					throw new UtilityInitializationException('Utility ' . $utilityClassName . ' depends on ' . $requiredUtility . ', ensure it is loaded first', 1448565354);
+				}
+			}
+
+			$utility::initialize();
+			self::$loadedUtilities[] = $utilityClassName;
+		}
+	}
+
+	/**
 	 * Initialize the class loader - both ours and the composer one
 	 *
 	 * @return void
@@ -71,71 +84,6 @@ class Bootstrap {
 		self::$classLoader = new Psr4ClassLoader();
 		self::$classLoader->addPrefix('Craod', self::ROOT_PATH . 'Classes/Craod');
 		self::$classLoader->register();
-	}
-
-	/**
-	 * Load the configuration for the given context
-	 *
-	 * @return void
-	 */
-	public static function loadConfiguration() {
-		Settings::initialize();
-	}
-
-	/**
-	 * Load the dependency injector
-	 *
-	 * @return void
-	 */
-	public static function loadDependencyInjector() {
-		DependencyInjector::initialize();
-	}
-
-	/**
-	 * Initialize Redis cache
-	 *
-	 * @return void
-	 */
-	public static function initializeCache() {
-		self::$cache = new \Predis\Client(Settings::get('Craod.Api.cache.settings'));
-		DependencyInjector::set('cache', self::$cache);
-		if (Settings::get('Craod.Api.cache.disable')) {
-			self::$cache->flushall();
-		}
-	}
-
-	/**
-	 * Initialize the database
-	 *
-	 * @throws \Doctrine\ORM\ORMException
-	 */
-	public static function initializeDatabase() {
-		$driver = new AnnotationDriver(new AnnotationReader(), [self::MODEL_PATH]);
-		AnnotationRegistry::registerLoader('class_exists');
-
-		$configuration = new Configuration();
-		$configuration->setMetadataDriverImpl($driver);
-		$configuration->setProxyDir(self::MODEL_PROXY_PATH);
-		$configuration->setProxyNamespace('Craod\Api\Proxy');
-		$configuration->setAutoGenerateProxyClasses(TRUE);
-
-		if (self::$cache !== NULL) {
-			$cache = new PredisCache(self::$cache);
-			$configuration->setMetadataCacheImpl($cache);
-			$configuration->setQueryCacheImpl($cache);
-		}
-
-		$parameters = Settings::get('Craod.Api.database.settings');
-
-		self::$entityManager = EntityManager::create($parameters, $configuration);
-		DependencyInjector::set('entityManager', self::$entityManager);
-		DependencyInjector::set('database', self::$entityManager->getConnection());
-
-		$databasePlatform = self::$entityManager->getConnection()->getDatabasePlatform();
-		foreach (Settings::get('Craod.Api.doctrine.types') as $type => $typeClassPath) {
-			Type::addType($type, $typeClassPath);
-			$databasePlatform->registerDoctrineTypeMapping($type, $type);
-		}
 	}
 
 	/**
