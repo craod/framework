@@ -7,6 +7,7 @@ pushd .
 cd /var/www
 
 ./Application/cli migrations:migrate --no-interaction
-if [[ "$CRAOD_CONTEXT" != "production" ]]; then ./Application/cli fixtures:up user; fi
+./Application/cli data:install
+if [[ "$CRAOD_CONTEXT" != "production" ]]; then ./Application/cli fixtures:up; fi
 
 popd

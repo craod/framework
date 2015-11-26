@@ -6,16 +6,17 @@ use Craod\Api\Cli\Fixture\AbstractFixture;
 use Craod\Api\Exception\InvalidFixtureException;
 use Craod\Api\Utility\Settings;
 
-use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Base fixture command class with common functions for interacting with fixtures
  *
  * @package Craod\Api\Cli\Command\Fixture
  */
-abstract class AbstractFixtureCommand extends AbstractCommand {
+abstract class AbstractFixtureCommand extends Command {
 
-	const CONFIGURATION_PATH = 'Craod.Api.cli.fixtures';
+	const MAP_PATH = 'Craod.Api.cli.fixtures.map';
+	const ORDER_PATH = 'Craod.Api.cli.fixtures.order';
 
 	/**
 	 * Get a map of given fixture names to their class paths
@@ -23,7 +24,7 @@ abstract class AbstractFixtureCommand extends AbstractCommand {
 	 * @return array
 	 */
 	protected function getFixtureMap() {
-		return Settings::get(self::CONFIGURATION_PATH, []);
+		return Settings::get(self::MAP_PATH, []);
 	}
 
 	/**
@@ -36,7 +37,7 @@ abstract class AbstractFixtureCommand extends AbstractCommand {
 		foreach ($this->getFixtureMap() as $name => $classPath) {
 			$fixtures[$name] = $this->getFixture($name);
 		}
-		return Settings::get(self::CONFIGURATION_PATH, []);
+		return Settings::get(self::MAP_PATH, []);
 	}
 
 	/**

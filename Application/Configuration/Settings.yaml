@@ -23,5 +23,17 @@ Craod:
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
         - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
         - 'Craod\Api\Cli\Command\Cache\FlushCommand'
+        - 'Craod\Api\Cli\Command\Data\InstallCommand'
+        - 'Craod\Api\Cli\Command\Data\UserRole\InstallCommand'
+      data:
+        userRole:
+          - 'administrator'
+        install:
+          - 'userrole'
       fixtures:
-        user: 'Craod\Api\Cli\Fixture\UserFixture'
+        order:
+          - 'userRole'
+          - 'user'
+        map:
+          userRole: 'Craod\Api\Cli\Fixture\UserRoleFixture'
+          user: 'Craod\Api\Cli\Fixture\UserFixture'

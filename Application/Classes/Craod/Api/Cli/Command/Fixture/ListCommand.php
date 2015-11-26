@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Cli\Command\Fixture;
 
+use Craod\Api\Utility\Settings;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,7 +23,7 @@ class ListCommand extends AbstractFixtureCommand {
 			->setName('fixtures:list')
 			->setDescription('List all the fixtures')
 			->setHelp(<<<EOT
-The <info>%command.name%</info> command shows a list of all fixtures as defined in the setting <info>{self::CONFIGURATION_PATH}</info>:
+The <info>%command.name%</info> command shows a list of all fixtures as defined in the setting <info>{self::MAP_PATH}</info>:
 
     <info>%command.full_name% fixture</info>
 EOT
@@ -48,6 +49,10 @@ EOT
 			} catch (\Exception $exception) {
 				$output->writeln('<error>Invalid fixture</error>');
 			}
+		}
+		$output->writeln('<comment>Order when calling "all"</comment>:');
+		foreach (Settings::get(self::ORDER_PATH) as $index => $name) {
+			$output->writeln('  <info>' . str_pad($index + 1, 20, ' ', STR_PAD_RIGHT) . '</info>' . $name);
 		}
 	}
 }

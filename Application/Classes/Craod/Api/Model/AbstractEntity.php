@@ -23,7 +23,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=TRUE)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
-	 * @ORM\CustomIdGenerator(class="Kiefernwald\DoctrineUuid\Doctrine\ORM\UuidGenerator")
+	 * @ORM\CustomIdGenerator(class="Craod\Api\Doctrine\ORM\UuidGenerator")
 	 */
 	protected $guid;
 

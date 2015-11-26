@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Cpliakas\Password\Password;
 
@@ -51,10 +52,21 @@ class User extends AbstractEntity {
 	protected $settings;
 
 	/**
+	 * @var ArrayCollection
+	 * @ORM\ManyToMany(targetEntity="UserRole", inversedBy="users", fetch="LAZY", cascade={"all"})
+	 * @ORM\JoinTable(name="users_user_roles_mm",
+	 *   joinColumns={@ORM\JoinColumn(name="users", referencedColumnName="guid")},
+	 *   inverseJoinColumns={@ORM\JoinColumn(name="user_roles", referencedColumnName="guid")}
+	 * )
+	 */
+	protected $userRoles;
+
+	/**
 	 * Initialize settings
 	 */
 	public function __construct() {
 		$this->settings = [];
+		$this->userRoles = new ArrayCollection();
 	}
 
 	/**
@@ -164,4 +176,56 @@ class User extends AbstractEntity {
 		return $this;
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getUserRoles() {
+		return $this->userRoles;
+	}
+
+	/**
+	 * @param ArrayCollection $userRoles
+	 * @return User
+	 */
+	public function setUserRoles($userRoles) {
+		$this->userRoles = $userRoles;
+		return $this;
+	}
+
+	/**
+	 * @param UserRole $userRole
+	 * @return boolean
+	 */
+	public function hasUserRole(UserRole $userRole) {
+		foreach ($this->getUserRoles() as $userRoleTest) {
+			if ($userRole->getGuid() === $userRoleTest->getGuid()) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	/**
+	 * @param UserRole $userRole
+	 * @return $this
+	 */
+	public function addUserRole(UserRole $userRole) {
+		if (!$this->hasUserRole($userRole)) {
+			$this->userRoles->add($userRole);
+		}
+		return $this;
+	}
+
+	/**
+	 * @param UserRole $userRole
+	 * @return $this
+	 */
+	public function removeUserRole(UserRole $userRole) {
+		foreach ($this->getUserRoles() as $key => $userRoleTest) {
+			if ($userRole->getGuid() === $userRoleTest->getGuid()) {
+				$this->userRoles->remove($key);
+			}
+		}
+		return $this;
+	}
 }

@@ -3,8 +3,7 @@
 namespace Craod\Api\Cli\Command\Cache;
 
 use Craod\Api\Utility\Cache;
-use Craod\Api\Utility\File;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
+use Symfony\Component\Console\Command\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * @package Craod\Api\Cli\Command\Cache
  */
-class FlushCommand extends AbstractCommand {
+class FlushCommand extends Command {
 
 	/**
 	 * Configure this command

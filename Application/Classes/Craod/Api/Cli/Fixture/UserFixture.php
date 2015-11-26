@@ -4,6 +4,7 @@ namespace Craod\Api\Cli\Fixture;
 
 use Craod\Api\Model\User;
 
+use Craod\Api\Model\UserRole;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -35,6 +36,8 @@ class UserFixture extends AbstractFixture {
 			$output->writeln('<comment>Already exists, setting to active</comment>');
 			$user->setActive(TRUE);
 		} else {
+			/** @var UserRole $userRole */
+			$userRole = UserRole::getRepository()->findOneBy(['abbreviation' => 'test']);
 			$user = new User();
 			$user->setActive(TRUE);
 			$user->setFirstName('Test');
@@ -42,6 +45,7 @@ class UserFixture extends AbstractFixture {
 			$user->setUsername('test');
 			$user->setPassword('password');
 			$user->setSettings(['one' => 1]);
+			$user->addUserRole($userRole);
 			$output->writeln('<comment>Created</comment>');
 		}
 		$user->save();
