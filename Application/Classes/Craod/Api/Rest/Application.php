@@ -5,6 +5,7 @@ namespace Craod\Api\Rest;
 use Craod\Api\Core\Application as CraodApplication;
 use Craod\Api\Rest\Controller\AbstractController;
 use Craod\Api\Rest\Exception\Exception as RestException;
+use Craod\Api\Rest\Exception\Exception;
 use Craod\Api\Rest\Exception\InvalidActionException;
 use Craod\Api\Rest\Exception\InvalidControllerException;
 use Craod\Api\Rest\Exception\NotFoundException;
@@ -39,9 +40,28 @@ class Application extends Slim implements CraodApplication {
 	 * @return void
 	 */
 	public function initialize() {
+		$this->contentType('application/json');
+		$this->addCorsSupport();
+		$this->loadRoutes();
 		$this->error([$this, 'handleError']);
 		$this->notFound([$this, 'handleNotFound']);
-		$this->loadRoutes();
+	}
+
+	/**
+	 * Adds CORS support by returning 200 on every OPTIONS request and returning the proper headers to allow CORS
+	 *
+	 * @return void
+	 */
+	public function addCorsSupport() {
+		$self = $this;
+		$this->options('/:route+', function($route) {
+			$this->response->status(HttpStatusCodes::OK);
+		});
+		$this->hook('slim.before.dispatch', function () use ($self) {
+			$self->response->header('Access-Control-Allow-Origin', '*');
+			$self->response->header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
+			$self->response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+		});
 	}
 
 	/**
@@ -106,11 +126,13 @@ class Application extends Slim implements CraodApplication {
 				$result = '{}';
 			}
 			$this->response->write($result);
-		} catch (\Exception $exception) {
+		} catch (\ErrorException $exception) {
 			if (strpos($exception->getMessage(), 'argument') !== FALSE) {
 				throw new InvalidActionException($exception->getMessage(), 1448243486);
-			} else {
+			} else if (strpos($exception->getMessage(), 'to be a valid callback') !== FALSE) {
 				throw new InvalidActionException('Controller ' . $controllerClassPath . ' has no method called ' . $actionMethodName, 1448243487);
+			} else {
+				throw new Exception($exception);
 			}
 		}
 	}

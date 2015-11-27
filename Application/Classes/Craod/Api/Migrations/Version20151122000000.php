@@ -31,13 +31,13 @@ class Version20151122000000 extends AbstractMigration {
 		$table->addColumn('guid', 'guid', ['unique' => TRUE]);
 		$table->addColumn('created', 'datetimetz');
 		$table->addColumn('active', 'boolean');
-		$table->addColumn('username', 'string', ['unique' => TRUE]);
+		$table->addColumn('email', 'string', ['unique' => TRUE]);
 		$table->addColumn('password', 'string');
 		$table->addColumn('firstname', 'string');
 		$table->addColumn('lastname', 'string');
 		$table->addColumn('settings', 'jsonb');
 		$table->setPrimaryKey(['guid']);
-		$table->addUniqueIndex(['username'], 'username_unique');
+		$table->addUniqueIndex(['email'], 'email_unique');
 		$table->addIndex(['firstname', 'lastname'], 'fullname_index');
 
 		$table = $schema->createTable('users_user_roles_mm');

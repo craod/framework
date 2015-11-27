@@ -31,6 +31,11 @@ abstract class AbstractController {
 	protected $response;
 
 	/**
+	 * @var mixed
+	 */
+	protected $requestData;
+
+	/**
 	 * Checks whether the controller class given points to a proper controller that is a subclass of this class
 	 *
 	 * @param string $controllerClassPath
@@ -49,6 +54,10 @@ abstract class AbstractController {
 		$this->application = $application;
 		$this->response = $application->response;
 		$this->request = $application->request;
+		$this->requestData = json_decode($this->request->getBody(), TRUE);
+		if (!is_array($this->requestData)) {
+			$this->requestData = [];
+		}
 	}
 
 	/**
@@ -111,6 +120,22 @@ abstract class AbstractController {
 	 */
 	public function setResponse($response) {
 		$this->response = $response;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRequestData() {
+		return $this->requestData;
+	}
+
+	/**
+	 * @param mixed $requestData
+	 * @return AbstractController
+	 */
+	public function setRequestData($requestData) {
+		$this->requestData = $requestData;
 		return $this;
 	}
 }

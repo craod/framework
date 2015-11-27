@@ -25,7 +25,7 @@ class User extends AbstractEntity {
 	 * @var string
 	 * @ORM\Column(type="string", unique=TRUE)
 	 */
-	protected $username;
+	protected $email;
 
 	/**
 	 * @var string|Password
@@ -99,16 +99,16 @@ class User extends AbstractEntity {
 	/**
 	 * @return string
 	 */
-	public function getUsername() {
-		return $this->username;
+	public function getEmail() {
+		return $this->email;
 	}
 
 	/**
-	 * @param string $username
+	 * @param string $email
 	 * @return User
 	 */
-	public function setUsername($username) {
-		$this->username = $username;
+	public function setEmail($email) {
+		$this->email = $email;
 		return $this;
 	}
 

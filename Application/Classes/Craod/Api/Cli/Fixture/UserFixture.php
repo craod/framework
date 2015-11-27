@@ -28,10 +28,10 @@ class UserFixture extends AbstractFixture {
 	 * @return void
 	 */
 	public function up(InputInterface $input, OutputInterface $output) {
-		$output->write('<comment>Creating user <info>test</info>... </comment>');
+		$output->write('<comment>Creating user <info>test@craod.com</info>... </comment>');
 		$repository = User::getRepository();
 		/** @var User $user */
-		$user = $repository->findOneBy(['username' => 'test']);
+		$user = $repository->findOneBy(['email' => 'test@craod.com']);
 		if ($user !== NULL) {
 			$output->writeln('<comment>Already exists, setting to active</comment>');
 			$user->setActive(TRUE);
@@ -42,7 +42,7 @@ class UserFixture extends AbstractFixture {
 			$user->setActive(TRUE);
 			$user->setFirstName('Test');
 			$user->setLastName('User');
-			$user->setUsername('test');
+			$user->setEmail('test@craod.com');
 			$user->setPassword('password');
 			$user->setSettings(['one' => 1]);
 			$user->addUserRole($userRole);
@@ -59,10 +59,10 @@ class UserFixture extends AbstractFixture {
 	 * @return void
 	 */
 	public function down(InputInterface $input, OutputInterface $output) {
-		$output->write('<comment>Deleting user <info>test</info>... </comment>');
+		$output->write('<comment>Deleting user <info>test@craod.com</info>... </comment>');
 		$repository = User::getRepository();
 		/** @var User $user */
-		$user = $repository->findOneBy(['username' => 'test']);
+		$user = $repository->findOneBy(['email' => 'test@craod.com']);
 		if ($user !== NULL) {
 			$user->delete();
 			$output->writeln('<comment>Done</comment>');
