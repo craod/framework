@@ -46,10 +46,16 @@ class User extends AbstractEntity {
 	protected $lastName;
 
 	/**
+	 * @var string
+	 * @ORM\Column(type="string")
+	 */
+	protected $token = '';
+
+	/**
 	 * @var array
 	 * @ORM\Column(type="jsonb")
 	 */
-	protected $settings;
+	protected $settings = [];
 
 	/**
 	 * @var ArrayCollection
@@ -65,7 +71,6 @@ class User extends AbstractEntity {
 	 * Initialize settings
 	 */
 	public function __construct() {
-		$this->settings = [];
 		$this->userRoles = new ArrayCollection();
 	}
 
@@ -77,6 +82,7 @@ class User extends AbstractEntity {
 	public function jsonSerialize() {
 		$value = parent::jsonSerialize();
 		unset($value['password']);
+		unset($value['token']);
 		return $value;
 	}
 
@@ -157,6 +163,22 @@ class User extends AbstractEntity {
 	 */
 	public function setLastName($lastName) {
 		$this->lastName = $lastName;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getToken() {
+		return $this->token;
+	}
+
+	/**
+	 * @param array $token
+	 * @return User
+	 */
+	public function setToken($token) {
+		$this->token = $token;
 		return $this;
 	}
 

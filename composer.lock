@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "1c0a797e10598c6547a835e3d66c02ed",
+    "content-hash": "c073984ad8ba2204e767afae62708e97",
     "packages": [
         {
             "name": "boldtrn/jsonb-bundle",

@@ -2,11 +2,14 @@
 
 namespace Craod\Api\Cli;
 
+use Craod\Api\Core\Application as CraodApplication;
 use Craod\Api\Utility\Database;
 use Craod\Api\Utility\Settings;
-use Craod\Api\Core\Application as CraodApplication;
+
 use Doctrine\DBAL\Migrations\Tools\Console\Command as DoctrineCommand;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+
 use Symfony\Component\Console\Application as CliApplication;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -35,6 +38,7 @@ class Cli extends CliApplication implements CraodApplication {
 		$helperSet = new HelperSet([
 			'db' => new ConnectionHelper(Database::getConnection()),
 			'dialog' => new DialogHelper(),
+			'em' => new EntityManagerHelper(Database::getEntityManager())
 		]);
 
 		$this->addCommandsFromSettings();
@@ -47,7 +51,7 @@ class Cli extends CliApplication implements CraodApplication {
 	 * @return void
 	 */
 	public function addCommandsFromSettings() {
-		foreach (Settings::get('Craod.Api.cli.commands') as $commandClassPath) {
+		foreach (Settings::get('Craod.Api.cli.commands.available') as $commandClassPath) {
 			$this->add(new $commandClassPath());
 		}
 	}

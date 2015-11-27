@@ -36,6 +36,7 @@ class Version20151122000000 extends AbstractMigration {
 		$table->addColumn('firstname', 'string');
 		$table->addColumn('lastname', 'string');
 		$table->addColumn('settings', 'jsonb');
+		$table->addColumn('token', 'string');
 		$table->setPrimaryKey(['guid']);
 		$table->addUniqueIndex(['email'], 'email_unique');
 		$table->addIndex(['firstname', 'lastname'], 'fullname_index');

@@ -111,6 +111,7 @@ class Application extends Slim implements CraodApplication {
 	 * @return void
 	 * @throws InvalidControllerException
 	 * @throws InvalidActionException
+	 * @throws Exception
 	 */
 	public function handleRoute($controllerClassPath, $parametersOrAction, $arguments) {
 		$controller = $this->getController($controllerClassPath);
@@ -121,7 +122,7 @@ class Application extends Slim implements CraodApplication {
 		}
 		$actionMethodName = $parameters['action'] . Settings::get('Craod.Api.rest.controller.actionMethodSuffix', 'Action');
 		try {
-			$result = json_encode(call_user_func_array([$controller, $actionMethodName], $arguments), JSON_NUMERIC_CHECK);
+			$result = json_encode(call_user_func_array([$controller, $actionMethodName], $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
 			if ($result === '[]') {
 				$result = '{}';
 			}
@@ -147,7 +148,7 @@ class Application extends Slim implements CraodApplication {
 			$exception = new RestException($exception);
 		}
 		$this->response->setStatus($exception->getStatusCode());
-		$this->response->write(json_encode($exception->jsonSerialize(), JSON_NUMERIC_CHECK));
+		$this->response->write(json_encode($exception->jsonSerialize(), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT));
 	}
 
 	/**

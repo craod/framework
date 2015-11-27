@@ -16,20 +16,24 @@ Craod:
         debug: false
     cli:
       commands:
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand'
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand'
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand'
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand'
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
-        - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
-        - 'Craod\Api\Cli\Command\Cache\FlushCommand'
-        - 'Craod\Api\Cli\Command\Data\InstallCommand'
-        - 'Craod\Api\Cli\Command\Data\UserRole\InstallCommand'
+        available:
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand'
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand'
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand'
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand'
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
+          - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
+          - 'Craod\Api\Cli\Command\Cache\FlushCommand'
+          - 'Craod\Api\Cli\Command\Data\InstallCommand'
+          - 'Craod\Api\Cli\Command\Data\UserRole\InstallCommand'
+          - 'Craod\Api\Cli\Command\Fixture\UpCommand'
+          - 'Craod\Api\Cli\Command\Fixture\DownCommand'
+          - 'Craod\Api\Cli\Command\Fixture\ListCommand'
+        'Craod\Api\Cli\Command\Data\InstallCommand':
+          - 'data:userrole:install'
       data:
         userRole:
           - 'administrator'
-        install:
-          - 'userrole'
       fixtures:
         order:
           - 'userRole'

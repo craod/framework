@@ -6,3 +6,11 @@
   controller: 'Craod\Api\Rest\Controller\UserController'
   actions:
     post: 'login'
+'/v1/user/logout':
+  controller: 'Craod\Api\Rest\Controller\UserController'
+  actions:
+    post: 'logout'
+'/v1/user/validate':
+  controller: 'Craod\Api\Rest\Controller\UserController'
+  actions:
+    post: 'validate'
