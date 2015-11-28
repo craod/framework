@@ -13,7 +13,7 @@ use Craod\Api\Rest\HttpStatusCodes;
 class Exception extends BaseException {
 
 	/**
-	 * @var array
+	 * @var integer
 	 */
 	protected $statusCode = HttpStatusCodes::INTERNAL_SERVER_ERROR;
 
@@ -46,14 +46,14 @@ class Exception extends BaseException {
 	}
 
 	/**
-	 * @return array
+	 * @return integer
 	 */
 	public function getStatusCode() {
 		return $this->statusCode;
 	}
 
 	/**
-	 * @param array $statusCode
+	 * @param integer $statusCode
 	 * @return Exception
 	 */
 	public function setStatusCode($statusCode) {

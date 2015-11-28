@@ -3,13 +3,19 @@
 namespace Craod\Api\Rest;
 
 use Craod\Api\Core\Application as CraodApplication;
-use Craod\Api\Rest\Controller\AbstractController;
 use Craod\Api\Rest\Exception\Exception as RestException;
+use Craod\Api\Model\User;
+use Craod\Api\Rest\Annotation\Validate;
+use Craod\Api\Rest\Controller\AbstractController;
 use Craod\Api\Rest\Exception\Exception;
 use Craod\Api\Rest\Exception\InvalidActionException;
 use Craod\Api\Rest\Exception\InvalidControllerException;
+use Craod\Api\Rest\Exception\InvalidTokenException;
 use Craod\Api\Rest\Exception\NotFoundException;
+use Craod\Api\Rest\Validator\AbstractControllerValidator;
+use Craod\Api\Utility\Annotations;
 use Craod\Api\Utility\Settings;
+
 use Slim\Slim;
 
 /**
@@ -27,6 +33,13 @@ class Application extends Slim implements CraodApplication {
 	protected static $routeMap;
 
 	/**
+	 * The user who did the request, if the appropriate tokens were set and found in the Database
+	 *
+	 * @var User
+	 */
+	protected $currentUser;
+
+	/**
 	 * Cli constructor
 	 */
 	public function __construct() {
@@ -40,11 +53,38 @@ class Application extends Slim implements CraodApplication {
 	 * @return void
 	 */
 	public function initialize() {
+		$self = $this;
 		$this->contentType('application/json');
-		$this->addCorsSupport();
-		$this->loadRoutes();
 		$this->error([$this, 'handleError']);
 		$this->notFound([$this, 'handleNotFound']);
+		$self->addCorsSupport();
+		$self->loadRoutes();
+		$this->hook('slim.before.dispatch', function () use ($self) {
+			$self->detectCurrentUser();
+		});
+	}
+
+	/**
+	 * If a guid and token were passed, detect the current user, and throw an exception if they are not valid
+	 *
+	 * @return void
+	 * @throws InvalidTokenException
+	 */
+	public function detectCurrentUser() {
+		$guid = $this->request->headers->get('Craod-Guid');
+		$token = $this->request->headers->get('Craod-Token');
+		if ($guid === NULL || $token === NULL) {
+			return NULL;
+		} else {
+			try {
+				$this->currentUser = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
+				if (!$this->currentUser) {
+					throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
+				}
+			} catch (\Exception $exception) {
+				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
+			}
+		}
 	}
 
 	/**
@@ -84,7 +124,6 @@ class Application extends Slim implements CraodApplication {
 	 * Load the routes using the Settings utility
 	 *
 	 * @return void
-	 * @throws \Craod\Api\Exception\InvalidSettingsBundleException
 	 */
 	public function loadRoutes() {
 		$self = $this;
@@ -94,9 +133,9 @@ class Application extends Slim implements CraodApplication {
 		foreach (self::$routeMap as $route => $routeData) {
 			$controllerClassPath = $routeData['controller'];
 			$actions = $routeData['actions'];
-			foreach ($actions as $method => $parameters) {
-				$this->map($route, function () use ($self, $route, $controllerClassPath, $parameters) {
-					$self->handleRoute($controllerClassPath, $parameters, func_get_args());
+			foreach ($actions as $method => $arguments) {
+				$this->map($route, function () use ($self, $route, $controllerClassPath, $arguments) {
+					$self->handleRoute($controllerClassPath, $arguments, func_get_args());
 				})->via(strtoupper($method));
 			}
 		}
@@ -122,10 +161,7 @@ class Application extends Slim implements CraodApplication {
 		}
 		$actionMethodName = $parameters['action'] . Settings::get('Craod.Api.rest.controller.actionMethodSuffix', 'Action');
 		try {
-			$result = json_encode(call_user_func_array([$controller, $actionMethodName], $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
-			if ($result === '[]') {
-				$result = '{}';
-			}
+			$result = json_encode($this->executeControllerAction($controller, $actionMethodName, $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
 			$this->response->write($result);
 		} catch (\ErrorException $exception) {
 			if (strpos($exception->getMessage(), 'argument') !== FALSE) {
@@ -139,16 +175,44 @@ class Application extends Slim implements CraodApplication {
 	}
 
 	/**
+	 * Validate the controller action and execute it if validation passes
+	 *
+	 * @param AbstractController $controller
+	 * @param string $actionMethodName
+	 * @param array $arguments
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function executeControllerAction($controller, $actionMethodName, $arguments) {
+		$reader = Annotations::getReader();
+		$controllerReflection = new \ReflectionClass($controller);
+		$actionMethodReflection = $controllerReflection->getMethod($actionMethodName);
+		foreach ($reader->getMethodAnnotations($actionMethodReflection) as $annotation) {
+			if ($annotation instanceof Validate) {
+				$validatorClass = $annotation->validator;
+				/** @var AbstractControllerValidator $validator */
+				$validator = new $validatorClass($controller, $actionMethodName, $arguments, $annotation);
+				$validator->validate();
+			}
+		}
+		return call_user_func_array([$controller, $actionMethodName], $arguments);
+	}
+
+	/**
 	 * Show the errors exclusively as JSON
 	 *
 	 * @param \Exception $exception
 	 */
 	public function handleError(\Exception $exception) {
-		if (!$exception instanceof RestException) {
+		if (!($exception instanceof RestException)) {
 			$exception = new RestException($exception);
 		}
-		$this->response->setStatus($exception->getStatusCode());
-		$this->response->write(json_encode($exception->jsonSerialize(), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT));
+		$exceptionAsArray = $exception->jsonSerialize();
+		if (strpos($exceptionAsArray['message'], 'SQLSTATE') !== FALSE) {
+			// We do not wish to expose the SQL query
+			$exceptionAsArray['message'] = explode('SQLSTATE', $exceptionAsArray['message'])[1];
+		}
+		$this->halt($exception->getStatusCode(), json_encode($exceptionAsArray, JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT));
 	}
 
 	/**
@@ -159,5 +223,12 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public function handleNotFound() {
 		throw new NotFoundException('Invalid route specified', 1448240606);
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getCurrentUser() {
+		return $this->currentUser;
 	}
 }

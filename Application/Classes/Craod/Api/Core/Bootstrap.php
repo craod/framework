@@ -17,6 +17,7 @@ class Bootstrap {
 	const CACHE = Utility\Cache::class;
 	const DATABASE = Utility\Database::class;
 	const CONFIGURATION = Utility\Settings::class;
+	const ANNOTATIONS = Utility\Annotations::class;
 
 	const ROOT_PATH = __DIR__  . '/../../../../';
 

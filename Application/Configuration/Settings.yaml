@@ -11,9 +11,14 @@ Craod:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
         password: 'Cpliakas\Password\Doctrine\PasswordType'
+    annotations:
+      settings:
+        debug: true
     rest:
       settings:
         debug: false
+        exposed:
+          one: 'two'
     cli:
       commands:
         available:
@@ -24,20 +29,14 @@ Craod:
           - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
           - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
           - 'Craod\Api\Cli\Command\Cache\FlushCommand'
-          - 'Craod\Api\Cli\Command\Data\InstallCommand'
-          - 'Craod\Api\Cli\Command\Data\UserRole\InstallCommand'
           - 'Craod\Api\Cli\Command\Fixture\UpCommand'
           - 'Craod\Api\Cli\Command\Fixture\DownCommand'
           - 'Craod\Api\Cli\Command\Fixture\ListCommand'
-        'Craod\Api\Cli\Command\Data\InstallCommand':
-          - 'data:userrole:install'
       data:
         userRole:
           - 'administrator'
       fixtures:
         order:
-          - 'userRole'
           - 'user'
         map:
-          userRole: 'Craod\Api\Cli\Fixture\UserRoleFixture'
           user: 'Craod\Api\Cli\Fixture\UserFixture'

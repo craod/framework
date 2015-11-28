@@ -1,0 +1,4 @@
+'/v1/settings':
+  controller: 'Craod\Api\Rest\Controller\GlobalController'
+  actions:
+    get: 'getSettings'

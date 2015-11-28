@@ -9,7 +9,8 @@ Bootstrap::initialize([
 	Bootstrap::DEPENDENCY_INJECTOR,
 	Bootstrap::CACHE,
 	Bootstrap::CONFIGURATION,
-	Bootstrap::DATABASE
+	Bootstrap::DATABASE,
+	Bootstrap::ANNOTATIONS
 ]);
 
 Bootstrap::run(Application::class);

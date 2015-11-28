@@ -48,9 +48,8 @@ class Database implements AbstractUtility {
 		$configuration->setAutoGenerateProxyClasses(TRUE);
 
 		if (Cache::isInitialized()) {
-			$cache = new PredisCache(Cache::getClient());
-			$configuration->setMetadataCacheImpl($cache);
-			$configuration->setQueryCacheImpl($cache);
+			$configuration->setMetadataCacheImpl(Cache::getProvider());
+			$configuration->setQueryCacheImpl(Cache::getProvider());
 		}
 
 		$parameters = Settings::get('Craod.Api.database.settings');

@@ -36,8 +36,6 @@ class UserFixture extends AbstractFixture {
 			$output->writeln('<comment>Already exists, setting to active</comment>');
 			$user->setActive(TRUE);
 		} else {
-			/** @var UserRole $userRole */
-			$userRole = UserRole::getRepository()->findOneBy(['abbreviation' => 'test']);
 			$user = new User();
 			$user->setActive(TRUE);
 			$user->setFirstName('Test');
@@ -45,7 +43,7 @@ class UserFixture extends AbstractFixture {
 			$user->setEmail('test@craod.com');
 			$user->setPassword('password');
 			$user->setSettings(['one' => 1]);
-			$user->addUserRole($userRole);
+			$user->addRole(User::ADMINISTRATOR);
 			$output->writeln('<comment>Created</comment>');
 		}
 		$user->save();

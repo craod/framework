@@ -53,7 +53,7 @@ class UserController extends AbstractController {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}
 		/** @var User $user */
-		$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token]);
+		$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
 		if ($user === NULL) {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}
@@ -64,6 +64,7 @@ class UserController extends AbstractController {
 	 *
 	 * @return boolean
 	 * @throws InvalidTokenException
+	 * @Craod\RequireUser
 	 */
 	public function logoutAction() {
 		$guid = $this->requestData['guid'];
@@ -72,7 +73,7 @@ class UserController extends AbstractController {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}
 		/** @var User $user */
-		$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token]);
+		$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
 		if ($user === NULL) {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}

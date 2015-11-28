@@ -1,6 +1,7 @@
 <?php
 
 namespace Craod\Api\Utility;
+use Doctrine\Common\Cache\PredisCache;
 use Predis\Client;
 
 /**
@@ -18,6 +19,13 @@ class Cache implements AbstractUtility {
 	protected static $client;
 
 	/**
+	 * The doctrine cache provider
+	 *
+	 * @var PredisCache
+	 */
+	protected static $provider;
+
+	/**
 	 * Initialize the Predis cache client
 	 *
 	 * @return void
@@ -31,6 +39,7 @@ class Cache implements AbstractUtility {
 		if (DependencyInjector::isInitialized()) {
 			DependencyInjector::set('cache', self::$client);
 		}
+		self::$provider = new PredisCache(self::$client);
 	}
 
 	/**
@@ -103,5 +112,12 @@ class Cache implements AbstractUtility {
 		} else {
 			return self::$client->set($key, NULL, 0);
 		}
+	}
+
+	/**
+	 * @return PredisCache
+	 */
+	public static function getProvider() {
+		return self::$provider;
 	}
 }

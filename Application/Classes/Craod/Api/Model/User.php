@@ -15,6 +15,8 @@ use Cpliakas\Password\Password;
  */
 class User extends AbstractEntity {
 
+	const ADMINISTRATOR = 2;
+
 	/**
 	 * @var boolean
 	 * @ORM\Column(type="boolean")
@@ -52,27 +54,16 @@ class User extends AbstractEntity {
 	protected $token = '';
 
 	/**
+	 * @var integer
+	 * @ORM\Column(type="integer")
+	 */
+	protected $roles = 0;
+
+	/**
 	 * @var array
 	 * @ORM\Column(type="jsonb")
 	 */
 	protected $settings = [];
-
-	/**
-	 * @var ArrayCollection
-	 * @ORM\ManyToMany(targetEntity="UserRole", inversedBy="users", fetch="LAZY", cascade={"all"})
-	 * @ORM\JoinTable(name="users_user_roles_mm",
-	 *   joinColumns={@ORM\JoinColumn(name="users", referencedColumnName="guid")},
-	 *   inverseJoinColumns={@ORM\JoinColumn(name="user_roles", referencedColumnName="guid")}
-	 * )
-	 */
-	protected $userRoles;
-
-	/**
-	 * Initialize settings
-	 */
-	public function __construct() {
-		$this->userRoles = new ArrayCollection();
-	}
 
 	/**
 	 * Serialize this object into a json array and remove the password
@@ -183,6 +174,48 @@ class User extends AbstractEntity {
 	}
 
 	/**
+	 * @return integer
+	 */
+	public function getRoles() {
+		return $this->roles;
+	}
+
+	/**
+	 * @param integer $roles
+	 * @return User
+	 */
+	public function setRole($roles) {
+		$this->roles = $roles;
+		return $this;
+	}
+
+	/**
+	 * @param integer $role
+	 * @return boolean
+	 */
+	public function hasRole($role) {
+		return (($this->roles & $role) === $role);
+	}
+
+	/**
+	 * @param integer $role
+	 * @return $this
+	 */
+	public function addRole($role) {
+		$this->roles |= $role;
+		return $this;
+	}
+
+	/**
+	 * @param integer $role
+	 * @return $this
+	 */
+	public function removeRole($role) {
+		$this->roles ^= $role;
+		return $this;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSettings() {
@@ -195,59 +228,6 @@ class User extends AbstractEntity {
 	 */
 	public function setSettings($settings) {
 		$this->settings = $settings;
-		return $this;
-	}
-
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getUserRoles() {
-		return $this->userRoles;
-	}
-
-	/**
-	 * @param ArrayCollection $userRoles
-	 * @return User
-	 */
-	public function setUserRoles($userRoles) {
-		$this->userRoles = $userRoles;
-		return $this;
-	}
-
-	/**
-	 * @param UserRole $userRole
-	 * @return boolean
-	 */
-	public function hasUserRole(UserRole $userRole) {
-		foreach ($this->getUserRoles() as $userRoleTest) {
-			if ($userRole->getGuid() === $userRoleTest->getGuid()) {
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-
-	/**
-	 * @param UserRole $userRole
-	 * @return $this
-	 */
-	public function addUserRole(UserRole $userRole) {
-		if (!$this->hasUserRole($userRole)) {
-			$this->userRoles->add($userRole);
-		}
-		return $this;
-	}
-
-	/**
-	 * @param UserRole $userRole
-	 * @return $this
-	 */
-	public function removeUserRole(UserRole $userRole) {
-		foreach ($this->getUserRoles() as $key => $userRoleTest) {
-			if ($userRole->getGuid() === $userRoleTest->getGuid()) {
-				$this->userRoles->remove($key);
-			}
-		}
 		return $this;
 	}
 }
