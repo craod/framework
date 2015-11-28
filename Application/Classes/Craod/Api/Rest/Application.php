@@ -80,6 +80,9 @@ class Application extends Slim implements CraodApplication {
 				$this->currentUser = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
 				if (!$this->currentUser) {
 					throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
+				} else {
+					// Update the "last access" date for the user
+					$this->currentUser->save();
 				}
 			} catch (\Exception $exception) {
 				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);

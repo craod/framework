@@ -14,6 +14,8 @@ Craod:
     annotations:
       settings:
         debug: true
+    user:
+      onlineThreshold: '-5 minutes'
     rest:
       settings:
         debug: false

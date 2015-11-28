@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Model;
 
+use Craod\Api\Utility\Settings;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Cpliakas\Password\Password;
@@ -12,6 +13,7 @@ use Cpliakas\Password\Password;
  * @package Craod\Api\Model
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Craod\Api\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class User extends AbstractEntity {
 
@@ -64,6 +66,32 @@ class User extends AbstractEntity {
 	 * @ORM\Column(type="jsonb")
 	 */
 	protected $settings = [];
+
+	/**
+	 * The time of the user's last action, to determine whether they are online
+	 *
+	 * @var \DateTime
+	 * @ORM\Column(type="datetimetz")
+	 */
+	protected $lastAccess;
+
+	/**
+	 * Checks whether the user is online based on the difference between the last action and the online threshold
+	 *
+	 * @return boolean
+	 */
+	public function isOnline() {
+		$threshold = new \DateTime(Settings::get('Craod.Api.user.onlineThreshold'));
+		return ($this->lastAccess !== NULL) && ($this->lastAccess > $threshold);
+	}
+
+	/**
+	 * @ORM\PrePersist()
+	 * @ORM\PreUpdate()
+	 */
+	public function onBeforePersist() {
+		$this->lastAccess = new \DateTime();
+	}
 
 	/**
 	 * Serialize this object into a json array and remove the password, token and settings - other users have no business knowing
@@ -231,5 +259,12 @@ class User extends AbstractEntity {
 	public function setSettings($settings) {
 		$this->settings = $settings;
 		return $this;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getLastAccess() {
+		return $this->lastAccess;
 	}
 }
