@@ -13,7 +13,12 @@ use Craod\Api\Rest\Exception\AuthenticationException;
  *
  * @package Craod\Api\Rest\Controller
  */
-class UserController extends AbstractController {
+class UserController extends CrudController {
+
+	/**
+	 * @var string
+	 */
+	protected $entityClass = User::class;
 
 	/**
 	 * Attempts to log the user in, if possible, then returns the user guid and token. This is the only time the token is provided
@@ -41,7 +46,7 @@ class UserController extends AbstractController {
 	}
 
 	/**
-	 * Validates the user represented by the given guid, by the token given
+	 * Validates the user represented by the given guid, by the token given. Also return the settings
 	 *
 	 * @return boolean
 	 * @throws InvalidTokenException
@@ -57,7 +62,9 @@ class UserController extends AbstractController {
 		if ($user === NULL) {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}
-		return $user;
+		$userAsArray = $user->jsonSerialize();
+		$userAsArray['settings'] = $user->getSettings();
+		return $userAsArray;
 	}
 	/**
 	 * Logs the user out - removes the token
@@ -83,14 +90,20 @@ class UserController extends AbstractController {
 	}
 
 	/**
-	 * Get a list of all the users, optionally filtered by the given offset, limit and ordered by the requested variable
+	 * Count all users based on the filters
+	 *
+	 * @return integer
+	 */
+	public function countAction() {
+		return parent::count(self::FILTER);
+	}
+
+	/**
+	 * Get all users based on the filters
 	 *
 	 * @return array
 	 */
-	public function getUsersAction() {
-		$repository = User::getRepository();
-		$offset = $this->getRequestVariable('offset', INPUT_GET);
-		$limit = $this->getRequestVariable('limit', INPUT_GET);
-		return $repository->findBy(['active' => TRUE], NULL, $limit, $offset);
+	public function getAllAction() {
+		return parent::getAll(self::FILTER | self::PAGINATE | self::SORT);
 	}
 }

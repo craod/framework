@@ -9,10 +9,5 @@ use Craod\Api\Rest\HttpStatusCodes;
  *
  * @package Craod\Api\Rest\Exception
  */
-class InvalidControllerException extends Exception {
-
-	/**
-	 * @var integer
-	 */
-	protected $statusCode = HttpStatusCodes::INTERNAL_SERVER_ERROR;
+class InvalidControllerException extends ControllerException {
 }

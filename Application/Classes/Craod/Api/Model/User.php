@@ -66,7 +66,8 @@ class User extends AbstractEntity {
 	protected $settings = [];
 
 	/**
-	 * Serialize this object into a json array and remove the password
+	 * Serialize this object into a json array and remove the password, token and settings - other users have no business knowing
+	 * these
 	 *
 	 * @return array
 	 */
@@ -74,6 +75,7 @@ class User extends AbstractEntity {
 		$value = parent::jsonSerialize();
 		unset($value['password']);
 		unset($value['token']);
+		unset($value['settings']);
 		return $value;
 	}
 

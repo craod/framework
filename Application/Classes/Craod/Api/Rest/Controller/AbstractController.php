@@ -68,7 +68,7 @@ abstract class AbstractController {
 	 * @return mixed
 	 */
 	public function getRequestVariable($name, $filter = FILTER_DEFAULT) {
-		$variable = filter_input(INPUT_GET, $name, $filter);
+		$variable = filter_var($this->getApplication()->request->get($name), $filter);
 		if ($variable === FALSE) {
 			$variable = NULL;
 		}
