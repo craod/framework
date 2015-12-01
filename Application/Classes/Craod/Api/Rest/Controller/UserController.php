@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Rest\Controller;
 
+use Craod\Api\Rest\Annotation as Craod;
 use Craod\Api\Model\User;
 use Craod\Api\Rest\Authentication\TokenGenerator;
 use Craod\Api\Rest\Exception\InvalidTokenException;
@@ -66,6 +67,7 @@ class UserController extends CrudController {
 		$userAsArray['settings'] = $user->getSettings();
 		return $userAsArray;
 	}
+
 	/**
 	 * Logs the user out - removes the token
 	 *
@@ -86,6 +88,50 @@ class UserController extends CrudController {
 		$user->setToken('');
 		$user->save();
 		return TRUE;
+	}
+
+	/**
+	 * Marks a user as active
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole(role="ADMINISTRATOR")
+	 */
+	public function activateAction($guid) {
+		/** @var User $user */
+		$user = User::getRepository()->findOneBy(['guid' => $guid]);
+		if ($user === NULL) {
+			throw new NotFoundException('Invalid user requested: ' . $guid, 1448652739);
+		} else if ($user->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('You may not edit a user if they have an administrator role', 1448985634);
+		}
+		$user->setActive(TRUE);
+		$user->save();
+		return $user->isActive();
+	}
+
+	/**
+	 * Marks a user as inactive
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole(role="ADMINISTRATOR")
+	 */
+	public function deactivateAction($guid) {
+		/** @var User $user */
+		$user = User::getRepository()->findOneBy(['guid' => $guid]);
+		if ($user === NULL) {
+			throw new NotFoundException('Invalid user requested: ' . $guid, 1448652739);
+		} else if ($user->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('You may not edit a user if they have an administrator role', 1448985634);
+		}
+		$user->setActive(FALSE);
+		$user->save();
+		return $user->isActive();
 	}
 
 	/**

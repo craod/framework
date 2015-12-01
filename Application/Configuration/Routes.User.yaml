@@ -18,3 +18,11 @@
   controller: 'Craod\Api\Rest\Controller\UserController'
   actions:
     post: 'validate'
+'/v1/user/activate/:guid':
+  controller: 'Craod\Api\Rest\Controller\UserController'
+  actions:
+    get: 'activate'
+'/v1/user/deactivate/:guid':
+  controller: 'Craod\Api\Rest\Controller\UserController'
+  actions:
+    get: 'deactivate'
