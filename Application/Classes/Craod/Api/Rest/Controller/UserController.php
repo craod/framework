@@ -71,7 +71,6 @@ class UserController extends CrudController {
 	 *
 	 * @return boolean
 	 * @throws InvalidTokenException
-	 * @Craod\RequireUser
 	 */
 	public function logoutAction() {
 		$guid = $this->requestData['guid'];

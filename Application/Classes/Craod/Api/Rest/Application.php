@@ -102,7 +102,7 @@ class Application extends Slim implements CraodApplication {
 		});
 		$this->hook('slim.before.dispatch', function () use ($self) {
 			$self->response->header('Access-Control-Allow-Origin', '*');
-			$self->response->header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
+			$self->response->header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, Craod-Guid, Craod-Token');
 			$self->response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 		});
 	}

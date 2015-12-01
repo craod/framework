@@ -82,24 +82,35 @@ class CrudController extends AbstractController {
 			$filters = $this->getRequestedFilters();
 		}
 		if (($flags & self::SORT) === self::SORT) {
-			$orderBy = $this->getRequestVariable('orderBy', FILTER_SANITIZE_STRING | FILTER_FLAG_EMPTY_STRING_NULL | FILTER_REQUIRE_SCALAR);
+			$sortBy = $this->getRequestVariable('sortBy', FILTER_SANITIZE_STRING);
+			$order = $this->getRequestVariable('order', FILTER_SANITIZE_STRING);
+			if ($sortBy !== NULL) {
+				if ($order !== NULL && ($order == 'asc' || $order == 'desc')) {
+					$orderBy = [$sortBy . ' ' . $order];
+				} else {
+					$orderBy = [$sortBy];
+				}
+			}
 		}
 		if (($flags & self::PAGINATE) === self::PAGINATE) {
-			$offset = $this->getRequestVariable('offset', FILTER_SANITIZE_NUMBER_INT | FILTER_REQUIRE_SCALAR);
-			$limit = $this->getRequestVariable('limit', FILTER_SANITIZE_NUMBER_INT | FILTER_REQUIRE_SCALAR);
+			$offset = $this->getRequestVariable('offset', FILTER_SANITIZE_NUMBER_INT);
+			$limit = $this->getRequestVariable('limit', FILTER_SANITIZE_NUMBER_INT);
 			if (!$offset) {
-				$offset = NULL;
+				$offset = 0;
 			}
 			if (!$limit) {
 				$limit = NULL;
 			}
 			try {
 				$count = $this->entityRepository->countBy($filters);
+				if ($limit === NULL) {
+					$limit = $count;
+				}
 				return [
-						'offset' => $offset,
-						'limit' => $limit,
-						'total' => $count,
-						'items' => $this->entityRepository->findBy($filters, $orderBy, $limit, $offset)
+					'offset' => $offset,
+					'limit' => $limit,
+					'total' => $count,
+					'items' => $this->entityRepository->findBy($filters, $orderBy, $limit, $offset)
 				];
 			} catch (\Exception $exception) {
 				throw new ControllerException('There was an error processing your request', 1448734691);

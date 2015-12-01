@@ -7,7 +7,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Cache\PredisCache;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -54,6 +53,22 @@ class Database implements AbstractUtility {
 
 		$parameters = Settings::get('Craod.Api.database.settings');
 
+		foreach (Settings::get('Craod.Api.doctrine.functions') as $type => $functions) {
+			foreach ($functions as $name => $functionClassPath) {
+				switch ($type) {
+					case 'string':
+						$configuration->addCustomStringFunction($name, $functionClassPath);
+						break;
+					case 'datetime':
+						$configuration->addCustomDatetimeFunction($name, $functionClassPath);
+						break;
+					case 'numeric':
+						$configuration->addCustomNumericFunction($name, $functionClassPath);
+						break;
+				}
+			}
+		}
+
 		self::$entityManager = EntityManager::create($parameters, $configuration);
 		self::$connection = self::$entityManager->getConnection();
 
@@ -61,11 +76,6 @@ class Database implements AbstractUtility {
 		foreach (Settings::get('Craod.Api.doctrine.types') as $type => $typeClassPath) {
 			Type::addType($type, $typeClassPath);
 			$databasePlatform->registerDoctrineTypeMapping($type, $type);
-		}
-
-		if (DependencyInjector::isInitialized()) {
-			DependencyInjector::set('entityManager', self::$entityManager);
-			DependencyInjector::set('database', self::$connection);
 		}
 	}
 

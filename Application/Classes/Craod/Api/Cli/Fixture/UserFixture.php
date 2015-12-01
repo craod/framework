@@ -4,9 +4,10 @@ namespace Craod\Api\Cli\Fixture;
 
 use Craod\Api\Model\User;
 
-use Craod\Api\Model\UserRole;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use Faker\Factory;
 
 /**
  * Fixture to create test users
@@ -14,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Craod\Api\Cli\Fixture
  */
 class UserFixture extends AbstractFixture {
+
+	const USERS_TO_CREATE = 63;
+	const GUID_RANGE = '39f73244-bda8-4105-a1ad-f96a7f9cxxxx';
 
 	/**
 	 * @var string
@@ -28,25 +32,34 @@ class UserFixture extends AbstractFixture {
 	 * @return void
 	 */
 	public function up(InputInterface $input, OutputInterface $output) {
-		$output->write('<comment>Creating user <info>test@craod.com</info>... </comment>');
+		$output->write('<comment>Creating ' . self::USERS_TO_CREATE . ' users... </comment>');
+		$faker = Factory::create();
 		$repository = User::getRepository();
-		/** @var User $user */
-		$user = $repository->findOneBy(['email' => 'test@craod.com']);
-		if ($user !== NULL) {
-			$output->writeln('<comment>Already exists, setting to active</comment>');
-			$user->setActive(TRUE);
-		} else {
-			$user = new User();
-			$user->setActive(TRUE);
-			$user->setFirstName('Test');
-			$user->setLastName('User');
-			$user->setEmail('test@craod.com');
-			$user->setPassword('password');
-			$user->setSettings(['one' => 1]);
-			$user->addRole(User::ADMINISTRATOR);
-			$output->writeln('<comment>Created</comment>');
+		$created = 0;
+		for ($count = 0; $count < self::USERS_TO_CREATE; $count++) {
+			$countPaddedToThousand = str_pad($count, 4, '0', STR_PAD_LEFT);
+			$guid = str_replace('xxxx', $countPaddedToThousand, self::GUID_RANGE);
+			/** @var User $user */
+			$user = $repository->findOneBy(['guid' => $guid]);
+			if ($user !== NULL) {
+				$user->setActive(TRUE);
+			} else {
+				$user = new User();
+				$user->setActive(TRUE);
+				$user->setGuid($guid);
+				$user->setFirstName($faker->firstName);
+				$user->setLastName($faker->lastName);
+				$user->setEmail($faker->email);
+				$user->setPassword($guid);
+				$user->setSettings([
+					'faker' => TRUE,
+					'fakerNumber' => $created
+				]);
+				$created++;
+			}
+			$user->save();
 		}
-		$user->save();
+		$output->writeln('<comment>Created ' . $created . ' users</comment>');
 	}
 
 	/**
@@ -57,15 +70,15 @@ class UserFixture extends AbstractFixture {
 	 * @return void
 	 */
 	public function down(InputInterface $input, OutputInterface $output) {
-		$output->write('<comment>Deleting user <info>test@craod.com</info>... </comment>');
+		$output->write('<comment>Deleting faker users... </comment>');
 		$repository = User::getRepository();
-		/** @var User $user */
-		$user = $repository->findOneBy(['email' => 'test@craod.com']);
-		if ($user !== NULL) {
+		$deleted = 0;
+		$guidMask = str_replace('xxxx', '%', self::GUID_RANGE);
+		foreach ($repository->findLike(['guid' => $guidMask]) as $user) {
+			/** @var User $user */
 			$user->delete();
-			$output->writeln('<comment>Done</comment>');
-		} else {
-			$output->writeln('<comment>Does not exist, not needed</comment>');
+			$deleted++;
 		}
+		$output->writeln('<comment>Deleted ' . $deleted . ' users</comment>');
 	}
 }

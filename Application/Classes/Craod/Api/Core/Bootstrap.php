@@ -13,7 +13,6 @@ use Craod\Api\Exception\UtilityInitializationException;
  */
 class Bootstrap {
 
-	const DEPENDENCY_INJECTOR = Utility\DependencyInjector::class;
 	const CACHE = Utility\Cache::class;
 	const DATABASE = Utility\Database::class;
 	const CONFIGURATION = Utility\Settings::class;

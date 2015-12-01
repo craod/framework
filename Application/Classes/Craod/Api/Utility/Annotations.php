@@ -30,9 +30,6 @@ class Annotations implements AbstractUtility {
 			Cache::getProvider(),
 			Settings::get('Craod.Api.annotations.settings.debug')
 		);
-		if (DependencyInjector::isInitialized()) {
-			DependencyInjector::set('annotationReader', self::$reader);
-		}
 	}
 
 	/**

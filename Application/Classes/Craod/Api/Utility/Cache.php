@@ -36,9 +36,6 @@ class Cache implements AbstractUtility {
 			'host' => '127.0.0.1',
 			'port' => 6379
 		]);
-		if (DependencyInjector::isInitialized()) {
-			DependencyInjector::set('cache', self::$client);
-		}
 		self::$provider = new PredisCache(self::$client);
 	}
 

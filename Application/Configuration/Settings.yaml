@@ -11,6 +11,10 @@ Craod:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
         password: 'Cpliakas\Password\Doctrine\PasswordType'
+      functions:
+        string:
+          cast: 'Oro\ORM\Query\AST\Functions\Cast'
+          get_json_field: 'Opsway\Doctrine\ORM\Query\AST\Functions\GetJsonField'
     annotations:
       settings:
         debug: true
@@ -31,6 +35,7 @@ Craod:
           - 'Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand'
           - 'Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand'
           - 'Craod\Api\Cli\Command\Cache\FlushCommand'
+          - 'Craod\Api\Cli\Command\Data\User\InstallCommand'
           - 'Craod\Api\Cli\Command\Fixture\UpCommand'
           - 'Craod\Api\Cli\Command\Fixture\DownCommand'
           - 'Craod\Api\Cli\Command\Fixture\ListCommand'

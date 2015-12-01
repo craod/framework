@@ -3,11 +3,10 @@
 namespace Craod\Api\Model;
 
 use Craod\Api\Utility\Database;
+use Craod\Api\Repository\AbstractRepository;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 
 /**
  * Class AbstractEntity
@@ -21,7 +20,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	/**
 	 * @var string
 	 * @ORM\Id
-	 * @ORM\Column(type="string", unique=TRUE)
+	 * @ORM\Column(type="guid", unique=TRUE)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
 	 * @ORM\CustomIdGenerator(class="Craod\Api\Doctrine\ORM\UuidGenerator")
 	 */
@@ -97,7 +96,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	/**
 	 * Get the repository for this model
 	 *
-	 * @return EntityRepository
+	 * @return AbstractRepository
 	 */
 	public static function getRepository() {
 		/** @var EntityManager $entityManager */
