@@ -6,7 +6,14 @@ Craod:
         user: 'craod'
         password: '123'
         host: 'localhost'
+        port: 5432
         driver: 'pdo_pgsql'
+    elasticSearch:
+      indexer:
+        path: "Data/Indexer/"
+      jdbc:
+        version: "2.1.0.0"
+        path: "../Configuration/elasticsearch-jdbc-2.1.0.0"
     doctrine:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
@@ -39,6 +46,7 @@ Craod:
           - 'Craod\Api\Cli\Command\Fixture\UpCommand'
           - 'Craod\Api\Cli\Command\Fixture\DownCommand'
           - 'Craod\Api\Cli\Command\Fixture\ListCommand'
+          - 'Craod\Api\Cli\Command\Search\IndexCommand'
       data:
         userRole:
           - 'administrator'
@@ -47,3 +55,7 @@ Craod:
           - 'user'
         map:
           user: 'Craod\Api\Cli\Fixture\UserFixture'
+        settings:
+          'Craod\Api\Cli\Fixture\UserFixture':
+            usersToCreate: 258
+            guidRange: '39f73244-bda8-4105-a1ad-f96a7f9cxxxx'

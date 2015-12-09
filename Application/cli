@@ -9,7 +9,8 @@ use Craod\Api\Cli\Cli;
 Bootstrap::initialize([
 	Bootstrap::CACHE,
 	Bootstrap::CONFIGURATION,
-	Bootstrap::DATABASE
+	Bootstrap::DATABASE,
+	Bootstrap::ANNOTATIONS
 ]);
 
 Bootstrap::run(Cli::class);

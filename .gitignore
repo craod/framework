@@ -1,6 +1,7 @@
 .idea
 .token
 .vagrant
-reset
 Application/Vendor
 Logs
+Configuration/elasticsearch-jdbc-2.1.0.0
+Configuration/logs

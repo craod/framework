@@ -1,6 +1,7 @@
 <?php
 
 namespace Craod\Api\Cli\Fixture;
+use Craod\Api\Utility\Settings;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -15,6 +16,18 @@ abstract class AbstractFixture {
 	 * @var string
 	 */
 	protected $description;
+
+	/**
+	 * @var array
+	 */
+	protected $settings;
+
+	/**
+	 * Fixtures construct with their settings automatically injected
+	 */
+	public function __construct() {
+		$this->settings = Settings::get('Craod.Api.cli.fixtures.settings.' . get_called_class(), []);
+	}
 
 	/**
 	 * Execute this fixture

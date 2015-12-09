@@ -14,7 +14,9 @@ fi
 craod cache:flush
 craod migrations:execute 20151122000000 --down --no-interaction
 craod migrations:migrate --no-interaction
+
 craod data:user:install
 if [[ "$CRAOD_CONTEXT" != "production" ]]; then craod fixtures:up; fi
+craod search:index User
 
 popd

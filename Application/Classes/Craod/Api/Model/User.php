@@ -2,15 +2,18 @@
 
 namespace Craod\Api\Model;
 
+use Craod\Api\Rest\Annotation as Craod;
 use Craod\Api\Utility\Settings;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
+
 use Cpliakas\Password\Password;
 
 /**
  * Class User
  *
  * @package Craod\Api\Model
+ * @Craod\Searchable
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Craod\Api\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks

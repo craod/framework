@@ -16,9 +16,6 @@ use Faker\Factory;
  */
 class UserFixture extends AbstractFixture {
 
-	const USERS_TO_CREATE = 63;
-	const GUID_RANGE = '39f73244-bda8-4105-a1ad-f96a7f9cxxxx';
-
 	/**
 	 * @var string
 	 */
@@ -32,13 +29,13 @@ class UserFixture extends AbstractFixture {
 	 * @return void
 	 */
 	public function up(InputInterface $input, OutputInterface $output) {
-		$output->write('<comment>Creating ' . self::USERS_TO_CREATE . ' users... </comment>');
+		$output->write('<comment>Creating ' . $this->settings['usersToCreate'] . ' users... </comment>');
 		$faker = Factory::create();
 		$repository = User::getRepository();
 		$created = 0;
-		for ($count = 0; $count < self::USERS_TO_CREATE; $count++) {
+		for ($count = 0; $count < $this->settings['usersToCreate']; $count++) {
 			$countPaddedToThousand = str_pad($count, 4, '0', STR_PAD_LEFT);
-			$guid = str_replace('xxxx', $countPaddedToThousand, self::GUID_RANGE);
+			$guid = str_replace('xxxx', $countPaddedToThousand, $this->settings['guidRange']);
 			/** @var User $user */
 			$user = $repository->findOneBy(['guid' => $guid]);
 			if ($user !== NULL) {
@@ -73,7 +70,7 @@ class UserFixture extends AbstractFixture {
 		$output->write('<comment>Deleting faker users... </comment>');
 		$repository = User::getRepository();
 		$deleted = 0;
-		$guidMask = str_replace('xxxx', '%', self::GUID_RANGE);
+		$guidMask = str_replace('xxxx', '%', $this->settings['guidRange']);
 		foreach ($repository->findLike(['guid' => $guidMask]) as $user) {
 			/** @var User $user */
 			$user->delete();
