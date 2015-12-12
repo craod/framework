@@ -84,8 +84,8 @@ class CrudController extends AbstractController {
 		if (($flags & self::SORT) === self::SORT) {
 			$sortBy = $this->getRequestVariable('sortBy', FILTER_SANITIZE_STRING);
 			$order = $this->getRequestVariable('order', FILTER_SANITIZE_STRING);
-			if ($sortBy !== NULL) {
-				if ($order !== NULL && ($order == 'asc' || $order == 'desc')) {
+			if ($sortBy !== '') {
+				if ($order !== '' && ($order == 'asc' || $order == 'desc')) {
 					$orderBy = [$sortBy . ' ' . $order];
 				} else {
 					$orderBy = [$sortBy];

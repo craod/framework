@@ -1,6 +1,6 @@
 <?php
 
-namespace Craod\Api\Migrations;
+namespace Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Migration to handle users and roles
  *
- * @package Craod\Api\Migrations
+ * @package Migrations
  */
 class Version20151122000000 extends AbstractMigration {
 

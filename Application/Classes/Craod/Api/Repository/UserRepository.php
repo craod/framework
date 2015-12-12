@@ -9,5 +9,5 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @package Craod\Api\Repository
  */
-class UserRepository extends AbstractRepository {
+class UserRepository extends SearchableRepository {
 }

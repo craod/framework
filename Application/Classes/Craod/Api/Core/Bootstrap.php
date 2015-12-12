@@ -17,6 +17,7 @@ class Bootstrap {
 	const DATABASE = Utility\Database::class;
 	const CONFIGURATION = Utility\Settings::class;
 	const ANNOTATIONS = Utility\Annotations::class;
+	const SEARCH = Utility\Search::class;
 
 	const ROOT_PATH = __DIR__  . '/../../../../';
 
@@ -59,9 +60,22 @@ class Bootstrap {
 	public static function initialize($utilities = []) {
 		self::initializeClassLoader();
 		self::$loadedUtilities = [];
-		foreach ($utilities as $utility) {
-			$utilityClassName = $utility;
+		foreach ($utilities as $utilityClassName) {
+			self::requireUtility($utilityClassName);
+		}
+	}
+
+	/**
+	 * Initialize the required utility by its class name
+	 *
+	 * @param string $utilityClassName
+	 * @return void
+	 * @throws UtilityInitializationException
+	 */
+	public static function requireUtility($utilityClassName) {
+		if (!in_array($utilityClassName, self::$loadedUtilities)) {
 			/** @var Utility\AbstractUtility $utility */
+			$utility = $utilityClassName;
 			foreach ($utility::getRequiredUtilities() as $requiredUtility) {
 				if (!in_array($requiredUtility, self::$loadedUtilities)) {
 					throw new UtilityInitializationException('Utility ' . $utilityClassName . ' depends on ' . $requiredUtility . ', ensure it is loaded first', 1448565354);

@@ -9,7 +9,8 @@ Bootstrap::initialize([
 	Bootstrap::CACHE,
 	Bootstrap::CONFIGURATION,
 	Bootstrap::DATABASE,
-	Bootstrap::ANNOTATIONS
+	Bootstrap::ANNOTATIONS,
+	Bootstrap::SEARCH
 ]);
 
 Bootstrap::run(Application::class);

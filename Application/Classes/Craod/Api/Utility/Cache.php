@@ -67,17 +67,35 @@ class Cache implements AbstractUtility {
 	}
 
 	/**
-	 * Retrieve a key from the client
+	 * Retrieve a value from the client
 	 *
 	 * @param string $key
 	 * @return string
 	 */
-	public static function get($key) {
-		return self::$client->get($key);
+	public static function get($key, $defaultValue = NULL) {
+		if (self::$client->exists($key)) {
+			return self::$client->get($key);
+		} else {
+			return $defaultValue;
+		}
 	}
 
 	/**
-	 * Set a key in the client
+	 * Retrieve a value from the client and json_decode it
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public static function getAsObject($key, $defaultValue = NULL) {
+		if (self::$client->exists($key)) {
+			return json_decode(self::$client->get($key), JSON_NUMERIC_CHECK);
+		} else {
+			return $defaultValue;
+		}
+	}
+
+	/**
+	 * Set a value in the client
 	 *
 	 * @param string $key
 	 * @param string $value
@@ -85,6 +103,17 @@ class Cache implements AbstractUtility {
 	 */
 	public static function set($key, $value) {
 		return self::$client->set($key, $value);
+	}
+
+	/**
+	 * Set a json encoded value in the client
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public static function setAsObject($key, $value) {
+		return self::set($key, json_encode($value, JSON_NUMERIC_CHECK));
 	}
 
 	/**

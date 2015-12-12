@@ -8,12 +8,11 @@ Craod:
         host: 'localhost'
         port: 5432
         driver: 'pdo_pgsql'
-    elasticSearch:
-      indexer:
-        path: "Data/Indexer/"
-      jdbc:
-        version: "2.1.0.0"
-        path: "../Configuration/elasticsearch-jdbc-2.1.0.0"
+    search:
+      index: 'craod'
+      settings:
+        number_of_shards: 1
+        number_of_replicas: 1
     doctrine:
       types:
         jsonb: 'Boldtrn\JsonbBundle\Types\JsonbArrayType'
@@ -46,7 +45,8 @@ Craod:
           - 'Craod\Api\Cli\Command\Fixture\UpCommand'
           - 'Craod\Api\Cli\Command\Fixture\DownCommand'
           - 'Craod\Api\Cli\Command\Fixture\ListCommand'
-          - 'Craod\Api\Cli\Command\Search\IndexCommand'
+          - 'Craod\Api\Cli\Command\Search\Index\CreateCommand'
+          - 'Craod\Api\Cli\Command\Search\Index\DeleteCommand'
       data:
         userRole:
           - 'administrator'

@@ -5,6 +5,7 @@ namespace Craod\Api\Model;
 use Craod\Api\Utility\Database;
 use Craod\Api\Repository\AbstractRepository;
 
+use Craod\Api\Utility\Search;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
 
@@ -38,7 +39,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @return void
 	 * @ORM\PrePersist
 	 */
-	public function beforeCreate() {
+	public function addCreationDate() {
 		if (!$this->created) {
 			$this->created = new \DateTime();
 		}

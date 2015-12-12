@@ -3,13 +3,16 @@
 namespace Craod\Api\Utility;
 
 use Craod\Api\Core\Bootstrap;
+
+use Craod\Api\Model\AbstractEntity;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * The database utility
@@ -30,6 +33,11 @@ class Database implements AbstractUtility {
 	 * @var EntityManager
 	 */
 	protected static $entityManager;
+
+	/**
+	 * @var array
+	 */
+	protected static $tableNames;
 
 	/**
 	 * Initialize the Predis cache client
@@ -77,6 +85,8 @@ class Database implements AbstractUtility {
 			Type::addType($type, $typeClassPath);
 			$databasePlatform->registerDoctrineTypeMapping($type, $type);
 		}
+
+		self::$tableNames = Cache::getAsObject('Database:tableNames', []);
 	}
 
 	/**
@@ -97,6 +107,28 @@ class Database implements AbstractUtility {
 		return [
 			Settings::class
 		];
+	}
+
+	/**
+	 * Get the table name for the given domain model
+	 *
+	 * @param AbstractEntity|string $domainModelOrClassPath
+	 * @return string
+	 */
+	public static function getTableName($domainModelOrClassPath) {
+		if ($domainModelOrClassPath instanceof AbstractEntity) {
+			$classPath = get_class($domainModelOrClassPath);
+		} else {
+			$classPath = $domainModelOrClassPath;
+		}
+		if (!isset(self::$tableNames[$classPath])) {
+			$reader = Annotations::getReader();
+			$reflectionClass = new \ReflectionClass($classPath);
+			$tableAnnotation = $reader->getClassAnnotation($reflectionClass, Table::class);
+			self::$tableNames[$classPath] = $tableAnnotation->name;
+			Cache::setAsObject('Database:tableNames', self::$tableNames);
+		}
+		return self::$tableNames[$classPath];
 	}
 
 	/**

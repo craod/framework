@@ -14,7 +14,7 @@ use Craod\Api\Rest\Exception\AuthenticationException;
  *
  * @package Craod\Api\Rest\Controller
  */
-class UserController extends CrudController {
+class UserController extends SearchableCrudController {
 
 	/**
 	 * @var string
@@ -150,5 +150,14 @@ class UserController extends CrudController {
 	 */
 	public function getAllAction() {
 		return parent::getAll(self::FILTER | self::PAGINATE | self::SORT);
+	}
+
+	/**
+	 * Search for users based on the criteria given
+	 *
+	 * @return User[]
+	 */
+	public function searchAction() {
+		return parent::search($this->requestData['searchTerms'], self::PAGINATE | self::SORT);
 	}
 }

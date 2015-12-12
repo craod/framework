@@ -17,9 +17,10 @@ class File {
 	public static function getContents($filename) {
 		if (Cache::isInitialized()) {
 			$lastModification = filemtime($filename);
-			if (!Cache::has($filename . '-modification') || !Cache::has($filename) || Cache::get($filename . '-modification') != $lastModification) {
+			$cacheKey = 'File:' . $filename . '-modification';
+			if (!Cache::has($cacheKey) || !Cache::has($filename) || Cache::get($cacheKey) != $lastModification) {
 				Cache::set($filename, file_get_contents($filename));
-				Cache::set($filename . '-modification', $lastModification);
+				Cache::set($cacheKey, $lastModification);
 			}
 			return Cache::get($filename);
 		} else {

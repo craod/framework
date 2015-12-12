@@ -13,12 +13,11 @@ use Cpliakas\Password\Password;
  * Class User
  *
  * @package Craod\Api\Model
- * @Craod\Searchable
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Craod\Api\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class User extends AbstractEntity {
+class User extends SearchableEntity {
 
 	const ADMINISTRATOR = 2;
 
@@ -31,6 +30,7 @@ class User extends AbstractEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string", unique=TRUE)
+	 * @Craod\Searchable({"analyzer": "simple"})
 	 */
 	protected $email;
 
@@ -43,12 +43,14 @@ class User extends AbstractEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
+	 * @Craod\Searchable({"analyzer": "simple"})
 	 */
 	protected $firstName;
 
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
+	 * @Craod\Searchable({"analyzer": "simple"})
 	 */
 	protected $lastName;
 
@@ -61,6 +63,7 @@ class User extends AbstractEntity {
 	/**
 	 * @var integer
 	 * @ORM\Column(type="integer")
+	 * @Craod\Searchable({"index": "not_analyzed"})
 	 */
 	protected $roles = 0;
 
@@ -75,6 +78,7 @@ class User extends AbstractEntity {
 	 *
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
+	 * @Craod\Searchable
 	 */
 	protected $lastAccess;
 
@@ -89,10 +93,12 @@ class User extends AbstractEntity {
 	}
 
 	/**
+	 * Set the user's last access to right now
+	 *
 	 * @ORM\PrePersist()
 	 * @ORM\PreUpdate()
 	 */
-	public function onBeforePersist() {
+	public function addLastAccessDate() {
 		$this->lastAccess = new \DateTime();
 	}
 

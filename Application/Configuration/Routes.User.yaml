@@ -1,28 +1,19 @@
 '/v1/user':
   controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    get: 'getAll'
-'/v1/user/count':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    get: 'count'
-'/v1/user/login':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    post: 'login'
-'/v1/user/logout':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    post: 'logout'
-'/v1/user/validate':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    post: 'validate'
-'/v1/user/activate/:guid':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    get: 'activate'
-'/v1/user/deactivate/:guid':
-  controller: 'Craod\Api\Rest\Controller\UserController'
-  actions:
-    get: 'deactivate'
+  routes:
+    '':
+      get: 'getAll'
+    '/count':
+      get: 'count'
+    '/search':
+      post: 'search'
+    '/login':
+      post: 'login'
+    '/logout':
+      post: 'logout'
+    '/validate':
+      post: 'validate'
+    '/activate/:guid':
+      get: 'activate'
+    '/deactivate/:guid':
+      get: 'deactivate'

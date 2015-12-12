@@ -133,13 +133,15 @@ class Application extends Slim implements CraodApplication {
 		$routesBundle = Settings::get('Craod.Api.rest.routes.bundle', 'Routes');
 		Settings::loadBundle($routesBundle);
 		self::$routeMap = Settings::getLoadedData($routesBundle);
-		foreach (self::$routeMap as $route => $routeData) {
-			$controllerClassPath = $routeData['controller'];
-			$actions = $routeData['actions'];
-			foreach ($actions as $method => $arguments) {
-				$this->map($route, function () use ($self, $route, $controllerClassPath, $arguments) {
-					$self->handleRoute($controllerClassPath, $arguments, func_get_args());
-				})->via(strtoupper($method));
+		foreach (self::$routeMap as $groupRoute => $groupData) {
+			$controllerClassPath = $groupData['controller'];
+			foreach ($groupData['routes'] as $partialRoute => $actions) {
+				$route = $groupRoute . $partialRoute;
+				foreach ($actions as $method => $arguments) {
+					$this->map($route, function () use ($self, $route, $controllerClassPath, $arguments) {
+						$self->handleRoute($controllerClassPath, $arguments, func_get_args());
+					})->via(strtoupper($method));
+				}
 			}
 		}
 	}

@@ -7,11 +7,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\QueryException;
 
 /**
- * Class UserRoleRepository
+ * Extends the standard EntityRepository by providing methods for count operations as well as using "like", and finding by jsonb fields
  *
  * @package Craod\Api\Repository
  */
-class AbstractRepository extends EntityRepository {
+abstract class AbstractRepository extends EntityRepository {
 
 	/**
 	 * Count all objects of this entity type
