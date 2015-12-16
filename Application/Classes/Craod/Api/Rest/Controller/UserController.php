@@ -147,15 +147,34 @@ class UserController extends SearchableCrudController {
 	 * Get all users based on the filters
 	 *
 	 * @return array
+	 * @Craod\RequireRole("ADMINISTRATOR")
 	 */
 	public function getAllAction() {
 		return parent::getAll(self::FILTER | self::PAGINATE | self::SORT);
 	}
 
 	/**
+	 * Retrieve the information for the given user
+	 *
+	 * @param string $guid
+	 * @return User
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole("ADMINISTRATOR")
+	 */
+	public function getAction($guid) {
+		/** @var User $user */
+		$user = parent::get($guid);
+		if ($user->hasRole(User::ADMINISTRATOR) && $user->getGuid() != $this->getApplication()->getCurrentUser()->getGuid()) {
+			throw new AuthenticationException('Administrators cannot be edited by other users', 1450218534);
+		}
+		return $user;
+	}
+
+	/**
 	 * Search for users based on the criteria given
 	 *
 	 * @return User[]
+	 * @Craod\RequireRequestData({"searchTerms"})
 	 */
 	public function searchAction() {
 		return parent::search($this->requestData['searchTerms'], self::PAGINATE | self::SORT);

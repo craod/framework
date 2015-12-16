@@ -14,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class SearchableRepository extends AbstractRepository {
 
+	const MULTI_MATCH = 'multi_match';
+
 	/**
 	 * Perform a search operation on the parallel Elasticsearch index using the given criteria and return the number of hits
 	 *
@@ -25,20 +27,8 @@ abstract class SearchableRepository extends AbstractRepository {
 		$search = [
 			'index' => Search::getIndexName(),
 			'type' => Search::getTypeNameForEntity($this->_entityName),
-			'body' => [
-				'query' => [
-					'match' => []
-				]
-			]
+			'body' => ['query' => $this->createQueryArray($criteria)]
 		];
-
-		foreach ($criteria as $property => $value) {
-			$search['body']['query']['match'][$property] = [
-					'query' => $value,
-					'fuzziness' => 'auto',
-					'operator' => 'and'
-			];
-		}
 
 		$response = $client->search($search);
 		return $response['hits']['total'];
@@ -58,19 +48,27 @@ abstract class SearchableRepository extends AbstractRepository {
 		$search = [
 			'index' => Search::getIndexName(),
 			'type' => Search::getTypeNameForEntity($this->_entityName),
-			'body' => [
-				'query' => [
-					'match' => []
-				]
-			]
+			'body' => ['query' => $this->createQueryArray($criteria)]
 		];
 
-		foreach ($criteria as $property => $value) {
-			$search['body']['query']['match'][$property] = [
-				'query' => $value,
-				'fuzziness' => 'auto',
-				'operator' => 'and'
-			];
+		if ($limit !== NULL) {
+			$search['size'] = $limit;
+		}
+
+		if ($offset !== NULL) {
+			$search['from'] = $offset;
+		}
+
+		if ($orderBy !== NULL) {
+			$search['body']['sort'] = [];
+			foreach ($orderBy as $value) {
+				$parts = explode(' ', $value);
+				if (count($parts) > 0) {
+					$search['body']['sort'][] = [$parts[0] => $parts[1]];
+				} else {
+					$search['body']['sort'][] = $parts[0];
+				}
+			}
 		}
 
 		$response = $client->search($search);
@@ -81,23 +79,30 @@ abstract class SearchableRepository extends AbstractRepository {
 				$queryBuilder->setParameter('guid' . $index, $hit['_id']);
 			}
 		}
-		if ($orderBy !== NULL) {
-			foreach ($orderBy as $value) {
-				$parts = explode(' ', $value);
-				if (count($parts) > 0) {
-					$queryBuilder->addOrderBy('entity.' . $parts[0], $parts[1]);
-				} else {
-					$queryBuilder->addOrderBy('entity.' . $value);
-				}
-			}
-		}
-		if ($offset !== NULL) {
-			$queryBuilder->setFirstResult($offset);
-		}
-		if ($limit !== NULL) {
-			$queryBuilder->setMaxResults($limit);
-		}
 
 		return $queryBuilder->getQuery()->getResult();
+	}
+
+	/**
+	 * Create an Elasticsearch query array based on the given criteria
+	 *
+	 * @param array $criteria
+	 * @return array
+	 */
+	protected function createQueryArray(array $criteria) {
+		$searchArray = [];
+		$type = $criteria['type'];
+		unset($criteria['type']);
+		switch ($type) {
+			case self::MULTI_MATCH:
+				$searchArray[$type] = [
+					'fuzziness' => 'auto',
+					'operator' => 'and'
+				];
+				break;
+		}
+
+		$searchArray[$type] = array_merge($searchArray[$type], $criteria);
+		return $searchArray;
 	}
 }

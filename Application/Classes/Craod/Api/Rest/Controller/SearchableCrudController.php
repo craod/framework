@@ -7,6 +7,7 @@ use Craod\Api\Model\SearchableEntity;
 use Craod\Api\Rest\Application;
 use Craod\Api\Repository\SearchableRepository;
 use Craod\Api\Rest\Exception\ControllerException;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Controller class for default CRUD actions
@@ -32,12 +33,26 @@ class SearchableCrudController extends CrudController {
 	/**
 	 * Search for entities using the provided search terms. If pagination or sorting are required, alter the resulting array in kind
 	 *
-	 * @param array $criteria The search criteria with the key being the property name and the value being the search term
+	 * @param string $query The query to be applied to all searchable string properties
 	 * @param integer $flags Whether to SORT and/or PAGINATE the results
 	 * @return array
 	 * @throws ControllerException
 	 */
-	public function search($criteria, $flags = 0) {
+	public function search($query, $flags = 0) {
+		/** @var SearchableEntity $entity */
+		$entity = $this->entityClass;
+		$criteria = [
+			'type' => SearchableRepository::MULTI_MATCH,
+		    'fields' => [],
+		    'query' => $query
+		];
+
+		foreach ($entity::getSearchableProperties() as $propertyName => $propertyType) {
+			if ($propertyType === Type::STRING) {
+				$criteria['fields'][] = $propertyName;
+			}
+		}
+
 		$orderBy = NULL;
 		if (($flags & self::SORT) === self::SORT) {
 			$sortBy = $this->getRequestVariable('sortBy', FILTER_SANITIZE_STRING);

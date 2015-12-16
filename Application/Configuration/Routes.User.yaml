@@ -3,6 +3,8 @@
   routes:
     '':
       get: 'getAll'
+    '/:guid':
+      get: 'get'
     '/count':
       get: 'count'
     '/search':

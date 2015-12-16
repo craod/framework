@@ -7,6 +7,7 @@ use Craod\Api\Rest\Application;
 use Craod\Api\Model\AbstractEntity;
 use Craod\Api\Repository\AbstractRepository;
 use Craod\Api\Rest\Exception\ControllerException;
+use Craod\Api\Rest\Exception\NotFoundException;
 
 /**
  * Controller class for default CRUD actions
@@ -122,6 +123,29 @@ class CrudController extends AbstractController {
 				throw new ControllerException('There was an error processing your request', 1448734691);
 			}
 		}
+	}
+
+	/**
+	 * Get an AbstractEntity by its guid, forcing an active check if the user is not an administrator, and throwing an exception if
+	 * the entity is not found
+	 *
+	 * @param string $guid
+	 * @return AbstractEntity
+	 * @throws NotFoundException
+	 */
+	public function get($guid) {
+		/** @var AbstractEntity $class */
+		$class = $this->entityClass;
+		$currentUser = $this->getApplication()->getCurrentUser();
+		$criteria = ['guid' => $guid];
+		if ($currentUser === NULL || !$currentUser->hasRole(User::ADMINISTRATOR)) {
+			$criteria['active'] = TRUE;
+		}
+		$object = $class::getRepository()->findOneBy($criteria);
+		if ($object === NULL) {
+			throw new NotFoundException('There is no ' . $class . ' with guid ' . $guid, 1450218753);
+		}
+		return $object;
 	}
 
 	/**
