@@ -2,6 +2,9 @@
 
 namespace Craod\Api\Model;
 
+use Craod\Api\Rest\Annotation\Api\Writable;
+use Craod\Api\Utility\Annotations;
+use Craod\Api\Utility\Cache;
 use Craod\Api\Utility\Database;
 use Craod\Api\Repository\AbstractRepository;
 
@@ -135,5 +138,32 @@ abstract class AbstractEntity implements \JsonSerializable {
 	public function setCreated($created) {
 		$this->created = $created;
 		return $this;
+	}
+
+	/**
+	 * Get a list of property names that have the writable annotation
+	 *
+	 * @return array
+	 */
+	public static function getWritableProperties() {
+		$classPath = get_called_class();
+		if (!Cache::has($classPath . ':writableProperties')) {
+			$writableProperties = [];
+			$entityManager = Database::getEntityManager();
+			$metadata = $entityManager->getClassMetadata($classPath);
+			$reflectionClass = new \ReflectionClass($classPath);
+			$reader = Annotations::getReader();
+			foreach ($reflectionClass->getProperties() as $property) {
+				/** @var Writable $propertyAnnotation */
+				$propertyAnnotation = $reader->getPropertyAnnotation($property, Writable::class);
+				if ($propertyAnnotation !== NULL) {
+					$propertyName = $property->getName();
+					$writableProperties[$propertyName] = $metadata->getTypeOfField($propertyName);
+				}
+			}
+			Cache::setAsObject($classPath . ':writableProperties', $writableProperties);
+		}
+
+		return Cache::getAsObject($classPath . ':writableProperties');
 	}
 }

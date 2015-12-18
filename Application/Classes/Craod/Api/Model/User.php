@@ -30,7 +30,8 @@ class User extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string", unique=TRUE)
-	 * @Craod\Searchable({"analyzer": "simple"})
+	 * @Craod\Api\Writable
+	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
 	protected $email;
 
@@ -43,14 +44,16 @@ class User extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
-	 * @Craod\Searchable({"analyzer": "simple"})
+	 * @Craod\Api\Writable
+	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
 	protected $firstName;
 
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
-	 * @Craod\Searchable({"analyzer": "simple"})
+	 * @Craod\Api\Writable
+	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
 	protected $lastName;
 
@@ -63,13 +66,14 @@ class User extends SearchableEntity {
 	/**
 	 * @var integer
 	 * @ORM\Column(type="integer")
-	 * @Craod\Searchable({"index": "not_analyzed"})
+	 * @Craod\Api\Searchable({"index": "not_analyzed"})
 	 */
 	protected $roles = 0;
 
 	/**
 	 * @var array
 	 * @ORM\Column(type="jsonb")
+	 * @Craod\Api\Writable
 	 */
 	protected $settings = [];
 
@@ -78,7 +82,7 @@ class User extends SearchableEntity {
 	 *
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
-	 * @Craod\Searchable
+	 * @Craod\Api\Searchable
 	 */
 	protected $lastAccess;
 

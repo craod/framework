@@ -3,8 +3,7 @@
   routes:
     '':
       get: 'getAll'
-    '/:guid':
-      get: 'get'
+      post: 'create'
     '/count':
       get: 'count'
     '/search':
@@ -15,7 +14,12 @@
       post: 'logout'
     '/validate':
       post: 'validate'
+    '/:guid':
+      get: 'get'
+      put: 'update'
     '/activate/:guid':
       get: 'activate'
     '/deactivate/:guid':
       get: 'deactivate'
+    '/available/:email':
+      get: 'checkEmailAvailability'

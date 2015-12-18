@@ -3,7 +3,9 @@
 namespace Craod\Api\Rest\Controller;
 
 use Craod\Api\Rest\Annotation as Craod;
+use Craod\Api\Model\SearchableEntity;
 use Craod\Api\Model\User;
+use Craod\Api\Service\Crud;
 use Craod\Api\Rest\Authentication\TokenGenerator;
 use Craod\Api\Rest\Exception\InvalidTokenException;
 use Craod\Api\Rest\Exception\NotFoundException;
@@ -14,7 +16,7 @@ use Craod\Api\Rest\Exception\AuthenticationException;
  *
  * @package Craod\Api\Rest\Controller
  */
-class UserController extends SearchableCrudController {
+class UserController extends AbstractController {
 
 	/**
 	 * @var string
@@ -140,7 +142,8 @@ class UserController extends SearchableCrudController {
 	 * @return integer
 	 */
 	public function countAction() {
-		return parent::count(self::FILTER);
+		$crudService = new Crud($this->entityClass);
+		return $crudService->count(Crud::FILTER);
 	}
 
 	/**
@@ -150,7 +153,8 @@ class UserController extends SearchableCrudController {
 	 * @Craod\RequireRole("ADMINISTRATOR")
 	 */
 	public function getAllAction() {
-		return parent::getAll(self::FILTER | self::PAGINATE | self::SORT);
+		$crudService = new Crud($this->entityClass);
+		return $crudService->getAll(Crud::FILTER | Crud::PAGINATE | Crud::SORT);
 	}
 
 	/**
@@ -162,12 +166,40 @@ class UserController extends SearchableCrudController {
 	 * @Craod\RequireRole("ADMINISTRATOR")
 	 */
 	public function getAction($guid) {
+		$crudService = new Crud($this->entityClass);
 		/** @var User $user */
-		$user = parent::get($guid);
+		$user = $crudService->get($guid);
 		if ($user->hasRole(User::ADMINISTRATOR) && $user->getGuid() != $this->getApplication()->getCurrentUser()->getGuid()) {
 			throw new AuthenticationException('Administrators cannot be edited by other users', 1450218534);
 		}
 		return $user;
+	}
+
+	/**
+	 * Create a user
+	 *
+	 * @return SearchableEntity
+	 */
+	public function createAction() {
+		$crudService = new Crud($this->entityClass);
+		return $crudService->create($this->requestData);
+	}
+
+	/**
+	 * Update the given user
+	 *
+	 * @param string $guid
+	 * @return SearchableEntity
+	 * @throws AuthenticationException
+	 * @Craod\RequireUser
+	 */
+	public function updateAction($guid) {
+		$crudService = new Crud($this->entityClass);
+		$currentUser = $this->getApplication()->getCurrentUser();
+		if ($currentUser->getGuid() != $guid && !$currentUser->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('Only administrators may edit another user', 1450310619);
+		}
+		return $crudService->update($this->requestData, $guid);
 	}
 
 	/**
@@ -177,6 +209,19 @@ class UserController extends SearchableCrudController {
 	 * @Craod\RequireRequestData({"searchTerms"})
 	 */
 	public function searchAction() {
-		return parent::search($this->requestData['searchTerms'], self::PAGINATE | self::SORT);
+		$crudService = new Crud($this->entityClass);
+		return $crudService->search($this->requestData['searchTerms'], Crud::PAGINATE | Crud::SORT);
+	}
+
+	/**
+	 * Checks whether the requested email address is available
+	 *
+	 * @param string $email
+	 * @return boolean
+	 */
+	public function checkEmailAvailabilityAction($email) {
+		/** @var User $user */
+		$user = User::getRepository()->findOneBy(['email' => $email]);
+		return ($user === NULL);
 	}
 }

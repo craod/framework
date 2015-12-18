@@ -26,6 +26,13 @@ use Slim\Slim;
 class Application extends Slim implements CraodApplication {
 
 	/**
+	 * The global application singleton
+	 *
+	 * @var Application
+	 */
+	protected static $application;
+
+	/**
 	 * The array of routes to their methods and controller actions
 	 *
 	 * @var array
@@ -44,6 +51,7 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public function __construct() {
 		parent::__construct(Settings::get('Craod.Api.rest.settings'));
+		self::$application = $this;
 		$this->initialize();
 	}
 
@@ -235,5 +243,12 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public function getCurrentUser() {
 		return $this->currentUser;
+	}
+
+	/**
+	 * @return Application
+	 */
+	public static function getApplication() {
+		return self::$application;
 	}
 }

@@ -5,7 +5,7 @@ namespace Craod\Api\Cli\Command\Search\Index;
 use Craod\Api\Core\Bootstrap;
 use Craod\Api\Exception\InvalidModelException;
 use Craod\Api\Exception\ModelNotSearchableException;
-use Craod\Api\Rest\Annotation\Searchable;
+use Craod\Api\Rest\Annotation\Api\Searchable;
 use Craod\Api\Utility\Annotations;
 use Craod\Api\Utility\Search;
 use Craod\Api\Utility\Settings;

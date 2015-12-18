@@ -2,7 +2,7 @@
 
 namespace Craod\Api\Model;
 
-use Craod\Api\Rest\Annotation\Searchable;
+use Craod\Api\Rest\Annotation\Api\Searchable;
 use Craod\Api\Repository\SearchableRepository;
 use Craod\Api\Utility\Annotations;
 use Craod\Api\Utility\Cache;
@@ -42,7 +42,7 @@ abstract class SearchableEntity extends AbstractEntity {
 	}
 
 	/**
-	 * Get a list of property names that have the searchable annotations
+	 * Get a list of property names that have the searchable annotation
 	 *
 	 * @return array
 	 */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Craod\Api\Rest\Annotation;
+namespace Craod\Api\Rest\Annotation\Api;
 
 use Doctrine\ORM\Mapping\Annotation;
 
