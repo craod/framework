@@ -222,6 +222,20 @@ class Crud {
 	}
 
 	/**
+	 * Delete an AbstractEntity by its guid, forcing an active check if the user is not an administrator, and throwing an exception if
+	 * the entity is not found
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 */
+	public function delete($guid) {
+		$entity = $this->get($guid);
+		$entity->delete();
+		return TRUE;
+	}
+
+	/**
 	 * Search for entities using the provided search terms. If pagination or sorting are required, alter the resulting array in kind
 	 *
 	 * @param string $query The query to be applied to all searchable string properties

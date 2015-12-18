@@ -178,7 +178,7 @@ class UserController extends AbstractController {
 	/**
 	 * Create a user
 	 *
-	 * @return SearchableEntity
+	 * @return User
 	 */
 	public function createAction() {
 		$crudService = new Crud($this->entityClass);
@@ -189,7 +189,7 @@ class UserController extends AbstractController {
 	 * Update the given user
 	 *
 	 * @param string $guid
-	 * @return SearchableEntity
+	 * @return User
 	 * @throws AuthenticationException
 	 * @Craod\RequireUser
 	 */
@@ -200,6 +200,24 @@ class UserController extends AbstractController {
 			throw new AuthenticationException('Only administrators may edit another user', 1450310619);
 		}
 		return $crudService->update($this->requestData, $guid);
+	}
+
+	/**
+	 * Delete the given user
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole("ADMINISTRATOR")
+	 */
+	public function deleteAction($guid) {
+		$crudService = new Crud($this->entityClass);
+		$currentUser = $this->getApplication()->getCurrentUser();
+		if ($currentUser->getGuid() == $guid) {
+			throw new AuthenticationException('Users may not delete themselves', 1450310619);
+		}
+
+		return $crudService->delete($guid);
 	}
 
 	/**

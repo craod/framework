@@ -22,12 +22,6 @@ class User extends SearchableEntity {
 	const ADMINISTRATOR = 2;
 
 	/**
-	 * @var boolean
-	 * @ORM\Column(type="boolean")
-	 */
-	protected $active;
-
-	/**
 	 * @var string
 	 * @ORM\Column(type="string", unique=TRUE)
 	 * @Craod\Api\Writable
@@ -118,22 +112,6 @@ class User extends SearchableEntity {
 		unset($value['token']);
 		unset($value['settings']);
 		return $value;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function isActive() {
-		return $this->active;
-	}
-
-	/**
-	 * @param boolean $active
-	 * @return User
-	 */
-	public function setActive($active) {
-		$this->active = $active;
-		return $this;
 	}
 
 	/**

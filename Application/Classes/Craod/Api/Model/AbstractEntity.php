@@ -22,6 +22,12 @@ use Doctrine\ORM\EntityManager;
 abstract class AbstractEntity implements \JsonSerializable {
 
 	/**
+	 * @var boolean
+	 * @ORM\Column(type="boolean")
+	 */
+	protected $active = FALSE;
+
+	/**
 	 * @var string
 	 * @ORM\Id
 	 * @ORM\Column(type="guid", unique=TRUE)
@@ -106,6 +112,22 @@ abstract class AbstractEntity implements \JsonSerializable {
 		/** @var EntityManager $entityManager */
 		$entityManager = Database::getEntityManager();
 		return $entityManager->getRepository(get_called_class());
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isActive() {
+		return $this->active;
+	}
+
+	/**
+	 * @param boolean $active
+	 * @return User
+	 */
+	public function setActive($active) {
+		$this->active = $active;
+		return $this;
 	}
 
 	/**

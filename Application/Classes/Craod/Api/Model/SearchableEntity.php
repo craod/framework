@@ -35,7 +35,7 @@ abstract class SearchableEntity extends AbstractEntity {
 	 * Remove this class from the index when it is deleted
 	 *
 	 * @return void
-	 * @ORM\PostRemove
+	 * @ORM\PreRemove
 	 */
 	public function removeFromIndex() {
 		Search::delete($this);
