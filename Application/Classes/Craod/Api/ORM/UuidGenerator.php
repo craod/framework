@@ -1,6 +1,6 @@
 <?php
 
-namespace Craod\Api\Doctrine\ORM;
+namespace Craod\Api\Orm;
 
 use Craod\Api\Model\AbstractEntity;
 use Doctrine\ORM\Mapping\Entity;

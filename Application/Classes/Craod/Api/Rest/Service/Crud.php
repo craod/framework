@@ -1,6 +1,6 @@
 <?php
 
-namespace Craod\Api\Service;
+namespace Craod\Api\Rest\Service;
 
 use Craod\Api\Model\AbstractEntity;
 use Craod\Api\Model\SearchableEntity;
@@ -11,9 +11,9 @@ use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Utility\CastingUtility;
 use Craod\Api\Rest\Application;
 use Craod\Api\Rest\Exception\ControllerException;
-use Craod\Api\Rest\Exception\InvalidCriteriaException;
 use Craod\Api\Rest\Exception\InvalidPropertyException;
 use Craod\Api\Rest\Exception\NotFoundException;
+use Craod\Api\Exception\InvalidCriteriaException;
 use Craod\Api\Exception\ModelNotSearchableException;
 
 use Doctrine\DBAL\Types\Type;
@@ -21,7 +21,7 @@ use Doctrine\DBAL\Types\Type;
 /**
  * Service class for default CRUD actions for a given entity
  *
- * @package Craod\Api\Service
+ * @package Craod\Api\Rest\Service
  */
 class Crud {
 

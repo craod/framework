@@ -7,7 +7,7 @@ use Craod\Api\Model\User;
 /**
  * Class for generating unique tokens
  *
- * @package Craod\Api\Rest\Controller
+ * @package Craod\Api\Rest\Authentication
  */
 class TokenGenerator {
 

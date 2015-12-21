@@ -32,7 +32,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @ORM\Id
 	 * @ORM\Column(type="guid", unique=TRUE)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
-	 * @ORM\CustomIdGenerator(class="Craod\Api\Doctrine\ORM\UuidGenerator")
+	 * @ORM\CustomIdGenerator(class="Craod\Api\Orm\UuidGenerator")
 	 */
 	protected $guid;
 

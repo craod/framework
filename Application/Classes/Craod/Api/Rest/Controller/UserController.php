@@ -3,9 +3,8 @@
 namespace Craod\Api\Rest\Controller;
 
 use Craod\Api\Rest\Annotation as Craod;
-use Craod\Api\Model\SearchableEntity;
 use Craod\Api\Model\User;
-use Craod\Api\Service\Crud;
+use Craod\Api\Rest\Service\Crud;
 use Craod\Api\Rest\Authentication\TokenGenerator;
 use Craod\Api\Rest\Exception\InvalidTokenException;
 use Craod\Api\Rest\Exception\NotFoundException;
