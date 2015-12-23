@@ -91,17 +91,6 @@ class User extends SearchableEntity {
 	}
 
 	/**
-	 * Set the user's last access to right now
-	 *
-	 * @return void
-	 * @ORM\PrePersist()
-	 * @ORM\PreUpdate()
-	 */
-	public function addLastAccessDate() {
-		$this->lastAccess = new \DateTime();
-	}
-
-	/**
 	 * Serialize this object into a json array and remove the password, token and settings - other users have no business knowing
 	 * these
 	 *
@@ -254,6 +243,13 @@ class User extends SearchableEntity {
 		return $this;
 	}
 
+	/**
+	 * @return $this
+	 */
+	public function updateLastAccess() {
+		$this->lastAccess = new \DateTime();
+		return $this;
+	}
 	/**
 	 * @return \DateTime
 	 */

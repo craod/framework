@@ -8,6 +8,14 @@ Craod:
         host: 'localhost'
         port: 5432
         driver: 'pdo_pgsql'
+    mail:
+      settings:
+        Host: 'smtp.gmail.com'
+        SMTPAuth: true
+        Username: 'donotreply@craod.com'
+        Password: 'nJWy&sU\RZeS+5Gb'
+        SMTPSecure: 'ssl'
+        Port: 465
     search:
       index: 'craod'
       settings:

@@ -10,6 +10,8 @@ use Craod\Api\Rest\Authentication\TokenGenerator;
 use Craod\Api\Rest\Exception\InvalidTokenException;
 use Craod\Api\Rest\Exception\NotFoundException;
 use Craod\Api\Rest\Exception\AuthenticationException;
+use Craod\Api\Utility\Mailer;
+use Craod\Api\Utility\Password;
 
 /**
  * Controller class for user actions
@@ -29,6 +31,7 @@ class UserController extends AbstractController {
 	 * @return array
 	 * @throws NotFoundException
 	 * @throws AuthenticationException
+	 * @Craod\RequireRequestData({"email", "password"})
 	 */
 	public function loginAction() {
 		/** @var User $user */
@@ -65,6 +68,8 @@ class UserController extends AbstractController {
 		if ($user === NULL) {
 			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 		}
+		$user->updateLastAccess();
+		$user->save();
 		$userAsArray = $user->jsonSerialize();
 		$userAsArray['settings'] = $user->getSettings();
 		return $userAsArray;
@@ -101,7 +106,7 @@ class UserController extends AbstractController {
 			/** @var User $user */
 			$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
 			if ($user === NULL) {
-				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652736);
+				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
 			}
 		}
 		$user->setToken('');
@@ -249,14 +254,13 @@ class UserController extends AbstractController {
 	}
 
 	/**
-	 * Change the user's password
+	 * Change the user's password to the one given
 	 *
 	 * @param string $guid
 	 * @return boolean
 	 * @throws NotFoundException
 	 * @throws AuthenticationException
 	 * @Craod\RequireUser
-	 * @Craod\RequireRequestData({"password"})
 	 */
 	public function changePasswordAction($guid) {
 		$currentUser = $this->getApplication()->getCurrentUser();
@@ -270,7 +274,14 @@ class UserController extends AbstractController {
 			throw new AuthenticationException('You may not change the password of another user if they have an administrator role', 1448985654);
 		}
 
-		$user->setPassword($this->requestData['password']);
+		if (isset($this->requestData['password'])) {
+			$user->setPassword($this->requestData['password']);
+		} else {
+			$password = Password::generate();
+			Mailer::sendMail(['security@craod.com' => 'Craod Security'], [$user], 'Your password has been changed', 'Here is your new password: ' . $password);
+			$user->setPassword($password);
+		}
+
 		$user->save();
 		return TRUE;
 	}
