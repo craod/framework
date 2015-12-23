@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Model;
 
+use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Rest\Annotation\Api\Writable;
 use Craod\Api\Utility\Annotations;
 use Craod\Api\Utility\Cache;
@@ -43,15 +44,10 @@ abstract class AbstractEntity implements \JsonSerializable {
 	protected $created;
 
 	/**
-	 * Assign a creation date before create if one does not exist
-	 *
-	 * @return void
-	 * @ORM\PrePersist
+	 * Assign a creation date on create
 	 */
-	public function addCreationDate() {
-		if (!$this->created) {
-			$this->created = new \DateTime();
-		}
+	public function __construct() {
+		$this->created = new \DateTime();
 	}
 
 	/**
@@ -87,17 +83,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 		$entityManager = Database::getEntityManager();
 		$metadata = $entityManager->getClassMetadata(get_called_class());
 		foreach ($metadata->getReflectionProperties() as $property => $reflectionProperty) {
-			$getterMethodName = 'get' . ucfirst($property);
-			if (!method_exists($this, $getterMethodName)) {
-				$getterMethodName = 'is' . ucfirst($property);
-			}
-			if (!method_exists($this, $getterMethodName)) {
-				continue;
-			}
-			try {
-				$value[$property] = call_user_func([$this, $getterMethodName]);
-			} catch (\Exception $exception) {
-			}
+			$value[$property] = ObjectAccessor::getProperty($this, $property);
 		}
 
 		return $value;

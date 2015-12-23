@@ -33,7 +33,7 @@ class User extends SearchableEntity {
 	 * @var string|Password
 	 * @ORM\Column(type="password")
 	 */
-	protected $password;
+	protected $password = '';
 
 	/**
 	 * @var string
@@ -93,6 +93,7 @@ class User extends SearchableEntity {
 	/**
 	 * Set the user's last access to right now
 	 *
+	 * @return void
 	 * @ORM\PrePersist()
 	 * @ORM\PreUpdate()
 	 */
@@ -108,6 +109,7 @@ class User extends SearchableEntity {
 	 */
 	public function jsonSerialize() {
 		$value = parent::jsonSerialize();
+		$value['online'] = $this->isOnline();
 		unset($value['password']);
 		unset($value['token']);
 		unset($value['settings']);

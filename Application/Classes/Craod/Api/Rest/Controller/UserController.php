@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Rest\Controller;
 
+use Craod\Api\Repository\UserRepository;
 use Craod\Api\Rest\Annotation as Craod;
 use Craod\Api\Model\User;
 use Craod\Api\Rest\Service\Crud;
@@ -70,21 +71,38 @@ class UserController extends AbstractController {
 	}
 
 	/**
-	 * Logs the user out - removes the token
+	 * Logs the user out - removes the token. If a guid is given and the current user is an administrator, logs the user identified by
+	 * the guid out
 	 *
+	 * @param string $guid
 	 * @return boolean
 	 * @throws InvalidTokenException
+	 * @throws AuthenticationException
+	 * @throws NotFoundException
 	 */
-	public function logoutAction() {
-		$guid = $this->requestData['guid'];
-		$token = $this->requestData['token'];
-		if (!$token || strlen($token) < 10) {
-			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
-		}
-		/** @var User $user */
-		$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
-		if ($user === NULL) {
-			throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
+	public function logoutAction($guid = NULL) {
+		if ($guid !== NULL) {
+			$currentUser = $this->getApplication()->getCurrentUser();
+			if ($currentUser === NULL || !$currentUser->hasRole(User::ADMINISTRATOR)) {
+				throw new AuthenticationException('Only administrators can log other users out', 1448652732);
+			}
+			$user = User::getRepository()->findOneBy(['guid' => $guid]);
+			if ($user === NULL) {
+				throw new NotFoundException('User not found: ' . $guid, 1448652733);
+			} else if ($user->hasRole(User::ADMINISTRATOR)) {
+				throw new AuthenticationException('Administrators can not be logged out by other users', 1448652734);
+			}
+		} else {
+			$guid = $this->requestData['guid'];
+			$token = $this->requestData['token'];
+			if (!$token || strlen($token) < 10) {
+				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652735);
+			}
+			/** @var User $user */
+			$user = User::getRepository()->findOneBy(['guid' => $guid, 'token' => $token, 'active' => TRUE]);
+			if ($user === NULL) {
+				throw new InvalidTokenException('Invalid token presented: ' . $token, 1448652736);
+			}
 		}
 		$user->setToken('');
 		$user->save();
@@ -228,6 +246,33 @@ class UserController extends AbstractController {
 	public function searchAction() {
 		$crudService = new Crud($this->entityClass);
 		return $crudService->search($this->requestData['searchTerms'], Crud::PAGINATE | Crud::SORT);
+	}
+
+	/**
+	 * Change the user's password
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireUser
+	 * @Craod\RequireRequestData({"password"})
+	 */
+	public function changePasswordAction($guid) {
+		$currentUser = $this->getApplication()->getCurrentUser();
+		/** @var User $user */
+		$user = User::getRepository()->findOneBy(['guid' => $guid]);
+		if ($user === NULL) {
+			throw new NotFoundException('Invalid user requested: ' . $guid, 1448652759);
+		} else if ($currentUser->getGuid() != $guid && !$currentUser->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('Only administrators may change the password of another user', 1450310659);
+		} else if ($currentUser->getGuid() != $guid && $user->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('You may not change the password of another user if they have an administrator role', 1448985654);
+		}
+
+		$user->setPassword($this->requestData['password']);
+		$user->save();
+		return TRUE;
 	}
 
 	/**

@@ -12,6 +12,8 @@
       post: 'login'
     '/logout':
       post: 'logout'
+    '/logout/:guid':
+      get: 'logout'
     '/validate':
       post: 'validate'
     '/:guid':
@@ -24,3 +26,5 @@
       get: 'deactivate'
     '/available/:email':
       get: 'checkEmailAvailability'
+    '/password/change/:guid':
+      post: 'changePassword'
