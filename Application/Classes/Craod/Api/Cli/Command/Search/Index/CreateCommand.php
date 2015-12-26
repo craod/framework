@@ -3,6 +3,7 @@
 namespace Craod\Api\Cli\Command\Search\Index;
 
 use Craod\Api\Core\Bootstrap;
+use Craod\Api\Model\AbstractEntity;
 use Craod\Api\Model\SearchableEntity;
 use Craod\Api\Exception\InvalidModelException;
 use Craod\Api\Exception\ModelNotSearchableException;
@@ -152,11 +153,18 @@ EOT
 
 		switch ($columnType) {
 			default:
-				$mappingArray['type'] = $columnType;
+				if (is_subclass_of($columnType, AbstractEntity::class)) {
+					$mappingArray['type'] = 'string';
+				} else {
+					$mappingArray['type'] = $columnType;
+				}
 				break;
 			case 'datetimetz':
 				$mappingArray['type'] = 'date';
 				$mappingArray['format'] = 'yyyy-MM-dd HH:mm:ss';
+				break;
+			case 'guid';
+				$mappingArray['type'] = 'string';
 				break;
 		}
 

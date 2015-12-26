@@ -1,0 +1,14 @@
+'/v1/category':
+  controller: 'Craod\Api\Rest\Controller\CategoryController'
+  routes:
+    '':
+      get: 'getAll'
+      post: 'create'
+    '/count':
+      get: 'count'
+    '/search':
+      post: 'search'
+    '/:guid':
+      get: 'get'
+      put: 'update'
+      delete: 'delete'

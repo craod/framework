@@ -107,7 +107,12 @@ class Search implements AbstractUtility {
 	public static function castValueForIndexing($value, $columnType) {
 		switch ($columnType) {
 			default:
-				$castValue = $value;
+				if (is_subclass_of($columnType, AbstractEntity::class)) {
+					/** @var AbstractEntity $castValue */
+					$castValue = $value->getGuid();
+				} else {
+					$castValue = $value;
+				}
 				break;
 			case 'datetimetz':
 				/** @var \DateTime $value */

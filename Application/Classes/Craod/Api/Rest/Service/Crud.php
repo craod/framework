@@ -90,7 +90,7 @@ class Crud {
 		if (($flags & self::SORT) === self::SORT) {
 			$sortBy = filter_input(INPUT_GET, 'sortBy', FILTER_SANITIZE_STRING);
 			$order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_STRING);
-			if ($sortBy !== '') {
+			if ($sortBy !== '' && $sortBy !== NULL) {
 				if ($order !== '' && ($order == 'asc' || $order == 'desc')) {
 					$orderBy = [$sortBy . ' ' . $order];
 				} else {
@@ -331,7 +331,8 @@ class Crud {
 		}
 
 		// Only administrators get to see inactive entities
-		if (!Application::getApplication()->getCurrentUser()->hasRole(User::ADMINISTRATOR)) {
+		$currentUser = Application::getApplication()->getCurrentUser();
+		if ($currentUser === NULL || !$currentUser->hasRole(User::ADMINISTRATOR)) {
 			$filters['active'] = TRUE;
 		}
 		return $filters;

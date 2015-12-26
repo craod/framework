@@ -50,7 +50,8 @@ class UserFixture extends AbstractFixture {
 				$user->setPassword($guid);
 				$user->setSettings([
 					'faker' => TRUE,
-					'fakerNumber' => $created
+					'fakerNumber' => $created,
+					'fixture' => TRUE
 				]);
 				$created++;
 			}

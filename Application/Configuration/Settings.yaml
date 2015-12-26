@@ -61,9 +61,14 @@ Craod:
       fixtures:
         order:
           - 'user'
+          - 'category'
         map:
           user: 'Craod\Api\Cli\Fixture\UserFixture'
+          category: 'Craod\Api\Cli\Fixture\CategoryFixture'
         settings:
           'Craod\Api\Cli\Fixture\UserFixture':
             usersToCreate: 258
             guidRange: '39f73244-bda8-4105-a1ad-f96a7f9cxxxx'
+          'Craod\Api\Cli\Fixture\CategoryFixture':
+            usersToCreate: 258
+            guidRange: '39f73244-bda8-4105-a1ad-f96a7f9dxxxx'

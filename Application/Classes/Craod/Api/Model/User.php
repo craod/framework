@@ -81,6 +81,14 @@ class User extends SearchableEntity {
 	protected $lastAccess;
 
 	/**
+	 * Ensure there is a last access date set by default
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->lastAccess = new \DateTime();
+	}
+
+	/**
 	 * Checks whether the user is online based on the difference between the last action and the online threshold
 	 *
 	 * @return boolean
