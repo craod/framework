@@ -7,6 +7,7 @@ use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Model\SearchableEntity;
 use Craod\Api\Model\AbstractEntity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Elasticsearch\ClientBuilder;
@@ -108,8 +109,16 @@ class Search implements AbstractUtility {
 		switch ($columnType) {
 			default:
 				if (is_subclass_of($columnType, AbstractEntity::class)) {
-					/** @var AbstractEntity $castValue */
-					$castValue = $value->getGuid();
+					if ($value instanceof Collection) {
+						$castValue = [];
+						foreach ($value->getValues() as $propertyValue) {
+							$castValue[] = ($propertyValue instanceof AbstractEntity) ? $propertyValue->getGuid() : $propertyValue;
+						}
+					} else if ($value instanceof AbstractEntity) {
+						$castValue = $value->getGuid();
+					} else {
+						$castValue = $value;
+					}
 				} else {
 					$castValue = $value;
 				}

@@ -119,13 +119,13 @@ class Crud {
 					'items' => $this->entityRepository->findBy($filters, $orderBy, $limit, $offset)
 				];
 			} catch (\Exception $exception) {
-				throw new InvalidCriteriaException('There was an error processing your request', 1448734691);
+				throw new InvalidCriteriaException('There was an error processing your request', 1448734692);
 			}
 		} else {
 			try {
 				return $this->entityRepository->findBy($filters, $orderBy);
 			} catch (\Exception $exception) {
-				throw new InvalidCriteriaException('There was an error processing your request', 1448734691);
+				throw new InvalidCriteriaException('There was an error processing your request', 1448734693);
 			}
 		}
 	}
@@ -298,13 +298,13 @@ class Crud {
 					'items' => $entityRepository->searchBy($criteria, $orderBy, $limit, $offset)
 				];
 			} catch (\Exception $exception) {
-				throw new InvalidCriteriaException('There was an error processing your request', 1448734691);
+				throw new InvalidCriteriaException('There was an error processing your request', 1448734694);
 			}
 		} else {
 			try {
 				return $entityRepository->searchBy($criteria, $orderBy);
 			} catch (\Exception $exception) {
-				throw new InvalidCriteriaException('There was an error processing your request', 1448734691);
+				throw new InvalidCriteriaException('There was an error processing your request', 1448734695);
 			}
 		}
 	}

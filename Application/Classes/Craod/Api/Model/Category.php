@@ -59,6 +59,7 @@ class Category extends SearchableEntity {
 	 *   joinColumns={@ORM\JoinColumn(name="parentcategory", referencedColumnName="guid")},
 	 *   inverseJoinColumns={@ORM\JoinColumn(name="childcategory", referencedColumnName="guid")}
 	 * )
+	 * @Craod\Api\Searchable
 	 */
 	protected $parents;
 
@@ -69,6 +70,7 @@ class Category extends SearchableEntity {
 	 *   joinColumns={@ORM\JoinColumn(name="childcategory", referencedColumnName="guid")},
 	 *   inverseJoinColumns={@ORM\JoinColumn(name="parentcategory", referencedColumnName="guid")}
 	 * )
+	 * @Craod\Api\Searchable
 	 */
 	protected $children;
 

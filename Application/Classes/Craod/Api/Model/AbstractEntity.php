@@ -2,16 +2,17 @@
 
 namespace Craod\Api\Model;
 
-use Craod\Api\Object\ObjectAccessor;
+use Craod\Api\Rest\Annotation as Craod;
 use Craod\Api\Rest\Annotation\Api\Writable;
+use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Utility\Annotations;
 use Craod\Api\Utility\Cache;
 use Craod\Api\Utility\Database;
 use Craod\Api\Repository\AbstractRepository;
 
-use Craod\Api\Utility\Search;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class AbstractEntity
@@ -40,6 +41,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	/**
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
+	 * @Craod\Api\Searchable
 	 */
 	protected $created;
 
@@ -83,7 +85,17 @@ abstract class AbstractEntity implements \JsonSerializable {
 		$entityManager = Database::getEntityManager();
 		$metadata = $entityManager->getClassMetadata(get_called_class());
 		foreach ($metadata->getReflectionProperties() as $property => $reflectionProperty) {
-			$value[$property] = ObjectAccessor::getProperty($this, $property);
+			$propertyValue = ObjectAccessor::getProperty($this, $property);
+			if ($propertyValue instanceof Collection) {
+				$value[$property] = [];
+				foreach ($propertyValue->getValues() as $subPropertyValue) {
+					$value[$property][] = ($subPropertyValue instanceof AbstractEntity) ? $subPropertyValue->getGuid() : $subPropertyValue;
+				}
+			} else if ($propertyValue instanceof AbstractEntity) {
+				$value[$property] = $propertyValue->getGuid();
+			} else {
+				$value[$property] = $propertyValue;
+			}
 		}
 
 		return $value;

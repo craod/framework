@@ -2,17 +2,11 @@
 
 namespace Craod\Api\Rest\Controller;
 
-use Craod\Api\Model\Category;
-use Craod\Api\Repository\CategoryRepository;
 use Craod\Api\Rest\Annotation as Craod;
-use Craod\Api\Model\User;
 use Craod\Api\Rest\Service\Crud;
-use Craod\Api\Rest\Authentication\TokenGenerator;
-use Craod\Api\Rest\Exception\InvalidTokenException;
-use Craod\Api\Rest\Exception\NotFoundException;
+use Craod\Api\Model\Category;
+use Craod\Api\Model\User;
 use Craod\Api\Rest\Exception\AuthenticationException;
-use Craod\Api\Utility\Mailer;
-use Craod\Api\Utility\Password;
 
 /**
  * Controller class for category actions
