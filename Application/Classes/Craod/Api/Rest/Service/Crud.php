@@ -210,14 +210,13 @@ class Crud {
 		$propertyTypes = $entity::getWritableProperties();
 		foreach ($requestData as $propertyName => $rawValue) {
 			if (!isset($propertyTypes[$propertyName])) {
-				throw new InvalidPropertyException('Entity class ' . $entity . ' does not have a writable property named ' . $propertyName, 1450309430);
+				throw new InvalidPropertyException('Entity class ' . $class . ' does not have a writable property named ' . $propertyName, 1450309430);
 			} else {
 				$value = CastingUtility::castTo($rawValue, $propertyTypes[$propertyName]);
 				ObjectAccessor::setProperty($entity, $propertyName, $value);
 			}
 		}
 
-		$entity->save();
 		return $entity;
 	}
 
@@ -307,6 +306,21 @@ class Crud {
 				throw new InvalidCriteriaException('There was an error processing your request', 1448734695);
 			}
 		}
+	}
+
+	/**
+	 * Sets the entity as either active or inactive
+	 *
+	 * @param string $guid
+	 * @param boolean $active
+	 * @return boolean
+	 * @throws NotFoundException
+	 */
+	public function setActive($guid, $active) {
+		$entity = $this->get($guid);
+		$entity->setActive($active);
+		$entity->save();
+		return $entity->isActive();
 	}
 
 	/**

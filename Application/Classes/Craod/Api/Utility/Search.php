@@ -2,6 +2,7 @@
 
 namespace Craod\Api\Utility;
 
+use Craod\Api\Exception\Exception;
 use Craod\Api\Exception\ProtectedAccessException;
 use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Model\SearchableEntity;
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Client;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 /**
  * The elastic search indexer utility
@@ -92,7 +94,11 @@ class Search implements AbstractUtility {
 			'type' => self::getTypeNameForEntity($entityClassPath),
 			'id' => $entity->getGuid()
 		];
-		$response = self::$client->delete($indexArray);
+		try {
+			$response = self::$client->delete($indexArray);
+		} catch (Missing404Exception $exception) {
+			$response = NULL;
+		}
 
 		// Elasticsearch returns a "found": 1 value if the delete operation went well
 		return (is_array($response) && isset($response['found']) && $response['found']);

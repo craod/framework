@@ -12,3 +12,7 @@
       get: 'get'
       put: 'update'
       delete: 'delete'
+    '/activate/:guid':
+      get: 'activate'
+    '/deactivate/:guid':
+      get: 'deactivate'

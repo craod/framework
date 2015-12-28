@@ -3,6 +3,7 @@
 namespace Craod\Api\Rest;
 
 use Craod\Api\Core\Application as CraodApplication;
+use Craod\Api\Core\Bootstrap;
 use Craod\Api\Rest\Exception\Exception as RestException;
 use Craod\Api\Model\User;
 use Craod\Api\Rest\Annotation\Validate;
@@ -221,9 +222,9 @@ class Application extends Slim implements CraodApplication {
 			$exception = new RestException($exception);
 		}
 		$exceptionAsArray = $exception->jsonSerialize();
-		if (strpos($exceptionAsArray['message'], 'SQLSTATE') !== FALSE) {
+		if (Bootstrap::getContext() === self::PRODUCTION && strpos($exceptionAsArray['message'], 'SQLSTATE') !== FALSE) {
 			// We do not wish to expose the SQL query
-			$exceptionAsArray['message'] = explode('SQLSTATE', $exceptionAsArray['message'])[1];
+			$exceptionAsArray['message'] = 'SQLSTATE' . explode('SQLSTATE', $exceptionAsArray['message'])[1];
 		}
 		$this->halt($exception->getStatusCode(), json_encode($exceptionAsArray, JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT));
 	}

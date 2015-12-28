@@ -124,16 +124,7 @@ class UserController extends AbstractController {
 	 * @Craod\RequireRole(role="ADMINISTRATOR")
 	 */
 	public function activateAction($guid) {
-		/** @var User $user */
-		$user = User::getRepository()->findOneBy(['guid' => $guid]);
-		if ($user === NULL) {
-			throw new NotFoundException('Invalid user requested: ' . $guid, 1448652739);
-		} else if ($user->hasRole(User::ADMINISTRATOR)) {
-			throw new AuthenticationException('You may not edit a user if they have an administrator role', 1448985634);
-		}
-		$user->setActive(TRUE);
-		$user->save();
-		return $user->isActive();
+		return $this->setActive($guid, TRUE);
 	}
 
 	/**
@@ -146,16 +137,7 @@ class UserController extends AbstractController {
 	 * @Craod\RequireRole(role="ADMINISTRATOR")
 	 */
 	public function deactivateAction($guid) {
-		/** @var User $user */
-		$user = User::getRepository()->findOneBy(['guid' => $guid]);
-		if ($user === NULL) {
-			throw new NotFoundException('Invalid user requested: ' . $guid, 1448652739);
-		} else if ($user->hasRole(User::ADMINISTRATOR)) {
-			throw new AuthenticationException('You may not edit a user if they have an administrator role', 1448985634);
-		}
-		$user->setActive(FALSE);
-		$user->save();
-		return $user->isActive();
+		return $this->setActive($guid, FALSE);
 	}
 
 	/**
@@ -185,16 +167,11 @@ class UserController extends AbstractController {
 	 * @param string $guid
 	 * @return User
 	 * @throws AuthenticationException
-	 * @Craod\RequireRole("ADMINISTRATOR")
+	 * @Craod\RequireUser
 	 */
 	public function getAction($guid) {
 		$crudService = new Crud($this->entityClass);
-		/** @var User $user */
-		$user = $crudService->get($guid);
-		if ($user->hasRole(User::ADMINISTRATOR) && $user->getGuid() != $this->getApplication()->getCurrentUser()->getGuid()) {
-			throw new AuthenticationException('Administrators cannot be edited by other users', 1450218534);
-		}
-		return $user;
+		return $crudService->get($guid);
 	}
 
 	/**
@@ -204,7 +181,7 @@ class UserController extends AbstractController {
 	 */
 	public function createAction() {
 		$crudService = new Crud($this->entityClass);
-		return $crudService->create($this->requestData);
+		return $crudService->create($this->requestData)->save();
 	}
 
 	/**
@@ -221,7 +198,7 @@ class UserController extends AbstractController {
 		if ($currentUser->getGuid() != $guid && !$currentUser->hasRole(User::ADMINISTRATOR)) {
 			throw new AuthenticationException('Only administrators may edit another user', 1450310619);
 		}
-		return $crudService->update($this->requestData, $guid);
+		return $crudService->update($this->requestData, $guid)->save();
 	}
 
 	/**
@@ -296,5 +273,26 @@ class UserController extends AbstractController {
 		/** @var User $user */
 		$user = User::getRepository()->findOneBy(['email' => $email]);
 		return ($user === NULL);
+	}
+
+	/**
+	 * Sets the user as either active or inactive
+	 *
+	 * @param string $guid
+	 * @param boolean $active
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole(role="ADMINISTRATOR")
+	 */
+	protected function setActive($guid, $active) {
+		/** @var User $user */
+		$user = $this->getAction($guid);
+		if ($user->hasRole(User::ADMINISTRATOR)) {
+			throw new AuthenticationException('You may not edit a user if they have an administrator role', 1448985634);
+		}
+		$user->setActive($active);
+		$user->save();
+		return $user->isActive();
 	}
 }

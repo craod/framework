@@ -30,11 +30,11 @@ class Category extends SearchableEntity {
 
 	/**
 	 * @var User
-	 * @ORM\OneToOne(targetEntity="User", fetch="LAZY", cascade={"all"})
-	 * @ORM\JoinColumn(name="users", referencedColumnName="guid")
+	 * @ORM\OneToOne(targetEntity="User", fetch="LAZY")
+	 * @ORM\JoinColumn(name="author", referencedColumnName="guid")
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
-	protected $user;
+	protected $author;
 
 	/**
 	 * @var array
@@ -91,7 +91,7 @@ class Category extends SearchableEntity {
 	public function jsonSerialize() {
 		$value = parent::jsonSerialize();
 		$value['parents'] = $value['children'] = [];
-		$value['user'] = $this->getUser()->getGuid();
+		$value['user'] = $this->getAuthor()->getGuid();
 		foreach ($this->getParents() as $parent) {
 			$value['parents'][] = $parent->getGuid();
 		}
@@ -120,16 +120,16 @@ class Category extends SearchableEntity {
 	/**
 	 * @return User
 	 */
-	public function getUser() {
-		return $this->user;
+	public function getAuthor() {
+		return $this->author;
 	}
 
 	/**
-	 * @param User $user
+	 * @param User $author
 	 * @return Category
 	 */
-	public function setUser($user) {
-		$this->user = $user;
+	public function setAuthor($author) {
+		$this->author = $author;
 		return $this;
 	}
 

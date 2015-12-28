@@ -43,7 +43,7 @@ class CategoryFixture extends AbstractFixture {
 			$grandparent->setActive(TRUE);
 			$grandparent->setGuid($guid);
 			$grandparent->setName('Test grandparent');
-			$grandparent->setUser($user);
+			$grandparent->setAuthor($user);
 			$grandparent->setSettings([
 				'fixture' => TRUE
 			]);
@@ -67,7 +67,7 @@ class CategoryFixture extends AbstractFixture {
 			$parent->setActive(TRUE);
 			$parent->setGuid($guid);
 			$parent->setName('Test parent');
-			$parent->setUser($user);
+			$parent->setAuthor($user);
 			$parent->setSettings([
 				'fixture' => TRUE
 			]);
@@ -92,7 +92,7 @@ class CategoryFixture extends AbstractFixture {
 			$category->setActive(TRUE);
 			$category->setGuid($guid);
 			$category->setName('Test category');
-			$category->setUser($user);
+			$category->setAuthor($user);
 			$category->setSettings([
 				'fixture' => TRUE
 			]);

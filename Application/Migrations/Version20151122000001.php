@@ -24,10 +24,11 @@ class Version20151122000001 extends AbstractMigration {
 		$table->addColumn('created', 'datetimetz');
 		$table->addColumn('active', 'boolean');
 		$table->addColumn('name', 'string');
-		$table->addColumn('users', 'guid');
+		$table->addColumn('author', 'guid');
 		$table->addColumn('settings', 'jsonb');
 		$table->addColumn('lastactivity', 'datetimetz');
 		$table->setPrimaryKey(['guid']);
+		$table->addForeignKeyConstraint('users', ['author'], ['guid'], ['cascade' => 'all'], 'categories_author');
 
 		$table = $schema->createTable('categories_relations');
 		$table->addColumn('parentcategory', 'guid');

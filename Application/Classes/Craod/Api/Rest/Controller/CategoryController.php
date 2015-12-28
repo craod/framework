@@ -3,6 +3,7 @@
 namespace Craod\Api\Rest\Controller;
 
 use Craod\Api\Rest\Annotation as Craod;
+use Craod\Api\Rest\Exception\NotFoundException;
 use Craod\Api\Rest\Service\Crud;
 use Craod\Api\Model\Category;
 use Craod\Api\Model\User;
@@ -59,7 +60,12 @@ class CategoryController extends AbstractController {
 	 */
 	public function createAction() {
 		$crudService = new Crud($this->entityClass);
-		return $crudService->create($this->requestData);
+
+		/** @var Category $category */
+		$category = $crudService->create($this->requestData);
+		$category->setAuthor($this->getApplication()->getCurrentUser());
+		$category->updateLastActivity();
+		return $category->save();
 	}
 
 	/**
@@ -75,10 +81,12 @@ class CategoryController extends AbstractController {
 		/** @var Category $category */
 		$category = Category::getRepository()->findOneBy(['guid' => $guid]);
 		$currentUser = $this->getApplication()->getCurrentUser();
-		if ($category->getUser()->getGuid() !== $currentUser->getGuid() && !$currentUser->hasRole(User::ADMINISTRATOR)) {
+		if ($category->getAuthor()->getGuid() !== $currentUser->getGuid() && !$currentUser->hasRole(User::ADMINISTRATOR)) {
 			throw new AuthenticationException('Only administrators or owners may edit a category', 1450310629);
 		}
-		return $crudService->update($this->requestData, $guid);
+		$category = $crudService->update($this->requestData, $guid);
+		$category->updateLastActivity();
+		return $category->save();
 	}
 
 	/**
@@ -103,5 +111,33 @@ class CategoryController extends AbstractController {
 	public function searchAction() {
 		$crudService = new Crud($this->entityClass);
 		return $crudService->search($this->requestData['searchTerms'], Crud::PAGINATE | Crud::SORT);
+	}
+
+	/**
+	 * Marks a category as active
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole(role="ADMINISTRATOR")
+	 */
+	public function activateAction($guid) {
+		$crudService = new Crud($this->entityClass);
+		return $crudService->setActive($guid, TRUE);
+	}
+
+	/**
+	 * Marks a category as inactive
+	 *
+	 * @param string $guid
+	 * @return boolean
+	 * @throws NotFoundException
+	 * @throws AuthenticationException
+	 * @Craod\RequireRole(role="ADMINISTRATOR")
+	 */
+	public function deactivateAction($guid) {
+		$crudService = new Crud($this->entityClass);
+		return $crudService->setActive($guid, FALSE);
 	}
 }
