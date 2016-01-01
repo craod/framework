@@ -23,6 +23,7 @@ class Category extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Writable
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
@@ -32,6 +33,7 @@ class Category extends SearchableEntity {
 	 * @var User
 	 * @ORM\OneToOne(targetEntity="User", fetch="LAZY")
 	 * @ORM\JoinColumn(name="author", referencedColumnName="guid")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
 	protected $author;
@@ -39,6 +41,7 @@ class Category extends SearchableEntity {
 	/**
 	 * @var array
 	 * @ORM\Column(type="jsonb")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Writable
 	 */
 	protected $settings = [];
@@ -48,6 +51,7 @@ class Category extends SearchableEntity {
 	 *
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable
 	 */
 	protected $lastActivity;
@@ -59,6 +63,7 @@ class Category extends SearchableEntity {
 	 *   joinColumns={@ORM\JoinColumn(name="parentcategory", referencedColumnName="guid")},
 	 *   inverseJoinColumns={@ORM\JoinColumn(name="childcategory", referencedColumnName="guid")}
 	 * )
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable
 	 */
 	protected $parents;
@@ -70,6 +75,7 @@ class Category extends SearchableEntity {
 	 *   joinColumns={@ORM\JoinColumn(name="childcategory", referencedColumnName="guid")},
 	 *   inverseJoinColumns={@ORM\JoinColumn(name="parentcategory", referencedColumnName="guid")}
 	 * )
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable
 	 */
 	protected $children;
@@ -81,24 +87,6 @@ class Category extends SearchableEntity {
 		parent::__construct();
 		$this->parents = new ArrayCollection();
 		$this->children = new ArrayCollection();
-	}
-
-	/**
-	 * Serialize this object into a json array and return the parents and children
-	 *
-	 * @return array
-	 */
-	public function jsonSerialize() {
-		$value = parent::jsonSerialize();
-		$value['parents'] = $value['children'] = [];
-		$value['user'] = $this->getAuthor()->getGuid();
-		foreach ($this->getParents() as $parent) {
-			$value['parents'][] = $parent->getGuid();
-		}
-		foreach ($this->getChildren() as $child) {
-			$value['children'][] = $child->getGuid();
-		}
-		return $value;
 	}
 
 	/**

@@ -28,6 +28,7 @@ class Version20151122000000 extends AbstractMigration {
 		$table->addColumn('password', 'string');
 		$table->addColumn('firstname', 'string');
 		$table->addColumn('lastname', 'string');
+		$table->addColumn('profilepicture', 'boolean');
 		$table->addColumn('settings', 'jsonb');
 		$table->addColumn('token', 'string');
 		$table->addColumn('lastaccess', 'datetimetz');

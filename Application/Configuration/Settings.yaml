@@ -34,6 +34,12 @@ Craod:
         debug: true
     user:
       onlineThreshold: '-5 minutes'
+    storage:
+      settings:
+        bucket: 'craod'
+        endpoint: 's3.amazonaws.com'
+        accessKey: 'AKIAIWM4NXNCSMZIZAPQ'
+        secretKey: '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'
     rest:
       settings:
         debug: false

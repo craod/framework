@@ -24,6 +24,7 @@ class User extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string", unique=TRUE)
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Writable
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
@@ -38,6 +39,7 @@ class User extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Writable
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
@@ -46,10 +48,18 @@ class User extends SearchableEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(type="string")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Writable
 	 * @Craod\Api\Searchable({"analyzer": "simple"})
 	 */
 	protected $lastName;
+
+	/**
+	 * @var boolean
+	 * @ORM\Column(type="boolean")
+	 * @Craod\Api\Readable
+	 */
+	protected $profilePicture = FALSE;
 
 	/**
 	 * @var string
@@ -60,6 +70,7 @@ class User extends SearchableEntity {
 	/**
 	 * @var integer
 	 * @ORM\Column(type="integer")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable({"index": "not_analyzed"})
 	 */
 	protected $roles = 0;
@@ -67,7 +78,6 @@ class User extends SearchableEntity {
 	/**
 	 * @var array
 	 * @ORM\Column(type="jsonb")
-	 * @Craod\Api\Writable
 	 */
 	protected $settings = [];
 
@@ -76,6 +86,7 @@ class User extends SearchableEntity {
 	 *
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable
 	 */
 	protected $lastAccess;
@@ -107,9 +118,6 @@ class User extends SearchableEntity {
 	public function jsonSerialize() {
 		$value = parent::jsonSerialize();
 		$value['online'] = $this->isOnline();
-		unset($value['password']);
-		unset($value['token']);
-		unset($value['settings']);
 		return $value;
 	}
 
@@ -174,6 +182,22 @@ class User extends SearchableEntity {
 	 */
 	public function setLastName($lastName) {
 		$this->lastName = $lastName;
+		return $this;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getProfilePicture() {
+		return $this->profilePicture;
+	}
+
+	/**
+	 * @param boolean $profilePicture
+	 * @return $this
+	 */
+	public function setProfilePicture($profilePicture) {
+		$this->profilePicture = $profilePicture;
 		return $this;
 	}
 

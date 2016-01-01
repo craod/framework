@@ -47,29 +47,6 @@ abstract class SearchableEntity extends AbstractEntity {
 	 * @return array
 	 */
 	public static function getSearchableProperties() {
-		$classPath = get_called_class();
-		if (!Cache::has($classPath . ':searchableProperties')) {
-			$searchableProperties = [];
-			$entityManager = Database::getEntityManager();
-			$metadata = $entityManager->getClassMetadata($classPath);
-			$reflectionClass = new \ReflectionClass($classPath);
-			$reader = Annotations::getReader();
-			foreach ($reflectionClass->getProperties() as $property) {
-				/** @var Searchable $propertyAnnotation */
-				$propertyAnnotation = $reader->getPropertyAnnotation($property, Searchable::class);
-				if ($propertyAnnotation !== NULL) {
-					$propertyName = $property->getName();
-					$propertyType = $metadata->getTypeOfField($propertyName);
-					if ($propertyType === NULL) {
-						$mapping = $metadata->getAssociationMapping($propertyName);
-						$propertyType = $mapping['targetEntity'];
-					}
-					$searchableProperties[$propertyName] = $propertyType;
-				}
-			}
-			Cache::setAsObject($classPath . ':searchableProperties', $searchableProperties);
-		}
-
-		return Cache::getAsObject($classPath . ':searchableProperties');
+		return Annotations::getPropertiesByAnnotation(get_called_class(), Searchable::class);
 	}
 }

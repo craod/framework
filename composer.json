@@ -16,7 +16,8 @@
 		"elasticsearch/elasticsearch": "~2.0",
 		"phpmailer/phpmailer": "~5.2",
 		"league/oauth2-client": "1.1.*",
-		"league/oauth2-google": "1.0.*"
+		"league/oauth2-google": "1.0.*",
+		"tpyo/amazon-s3-php-class": "0.5.*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "4.4.*"

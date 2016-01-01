@@ -2,7 +2,9 @@
 
 namespace Craod\Api\Model;
 
+use Craod\Api\Annotation\CachedAnnotationAccessor;
 use Craod\Api\Rest\Annotation as Craod;
+use Craod\Api\Rest\Annotation\Api\Readable;
 use Craod\Api\Rest\Annotation\Api\Writable;
 use Craod\Api\Object\ObjectAccessor;
 use Craod\Api\Utility\Annotations;
@@ -26,6 +28,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	/**
 	 * @var boolean
 	 * @ORM\Column(type="boolean")
+	 * @Craod\Api\Readable
 	 */
 	protected $active = FALSE;
 
@@ -35,12 +38,14 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @ORM\Column(type="guid", unique=TRUE)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
 	 * @ORM\CustomIdGenerator(class="Craod\Api\Orm\UuidGenerator")
+	 * @Craod\Api\Readable
 	 */
 	protected $guid;
 
 	/**
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
+	 * @Craod\Api\Readable
 	 * @Craod\Api\Searchable
 	 */
 	protected $created;
@@ -82,9 +87,7 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 */
 	public function jsonSerialize() {
 		$value = [];
-		$entityManager = Database::getEntityManager();
-		$metadata = $entityManager->getClassMetadata(get_called_class());
-		foreach ($metadata->getReflectionProperties() as $property => $reflectionProperty) {
+		foreach (self::getReadableProperties() as $property => $_) {
 			$propertyValue = ObjectAccessor::getProperty($this, $property);
 			if ($propertyValue instanceof Collection) {
 				$value[$property] = [];
@@ -161,29 +164,20 @@ abstract class AbstractEntity implements \JsonSerializable {
 	}
 
 	/**
+	 * Get a list of property names that have the readable annotation
+	 *
+	 * @return array
+	 */
+	public static function getReadableProperties() {
+		return Annotations::getPropertiesByAnnotation(get_called_class(), Readable::class);
+	}
+
+	/**
 	 * Get a list of property names that have the writable annotation
 	 *
 	 * @return array
 	 */
 	public static function getWritableProperties() {
-		$classPath = get_called_class();
-		if (!Cache::has($classPath . ':writableProperties')) {
-			$writableProperties = [];
-			$entityManager = Database::getEntityManager();
-			$metadata = $entityManager->getClassMetadata($classPath);
-			$reflectionClass = new \ReflectionClass($classPath);
-			$reader = Annotations::getReader();
-			foreach ($reflectionClass->getProperties() as $property) {
-				/** @var Writable $propertyAnnotation */
-				$propertyAnnotation = $reader->getPropertyAnnotation($property, Writable::class);
-				if ($propertyAnnotation !== NULL) {
-					$propertyName = $property->getName();
-					$writableProperties[$propertyName] = $metadata->getTypeOfField($propertyName);
-				}
-			}
-			Cache::setAsObject($classPath . ':writableProperties', $writableProperties);
-		}
-
-		return Cache::getAsObject($classPath . ':writableProperties');
+		return Annotations::getPropertiesByAnnotation(get_called_class(), Writable::class);
 	}
 }

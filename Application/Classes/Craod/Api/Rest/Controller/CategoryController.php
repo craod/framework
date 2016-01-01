@@ -8,6 +8,7 @@ use Craod\Api\Rest\Service\Crud;
 use Craod\Api\Model\Category;
 use Craod\Api\Model\User;
 use Craod\Api\Rest\Exception\AuthenticationException;
+use Craod\Api\Utility\Storage;
 
 /**
  * Controller class for category actions

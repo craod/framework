@@ -5,7 +5,7 @@ namespace Craod\Api\Rest\Annotation\Api;
 use Doctrine\ORM\Mapping\Annotation;
 
 /**
- * The Writable annotation marks a property as writable by the Api, so that it may automatically be modified by the CRUD controller
+ * The Writable annotation marks a property as writable by the Api, so that it may automatically be modified by the CRUD service
  *
  * @Annotation
  * @Target({"PROPERTY"})

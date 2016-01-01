@@ -58,4 +58,38 @@ class Annotations implements AbstractUtility {
 	public static function getReader() {
 		return self::$reader;
 	}
+
+	/**
+	 * Get and cache a list of property names that have the requested annotation, skipping the need for constant reflection and also
+	 * obtaining the type of property being handled
+	 *
+	 * @param string $classPath
+	 * @param string $annotationClass
+	 * @return array Returns an associative array with the property names as keys and their column types or class names as values
+	 */
+	public static function getPropertiesByAnnotation($classPath, $annotationClass) {
+		$cacheKey = $classPath . ':propertiesByAnnotation:' . $annotationClass;
+		if (!Cache::has($cacheKey)) {
+			$properties = [];
+			$entityManager = Database::getEntityManager();
+			$metadata = $entityManager->getClassMetadata($classPath);
+			$reflectionClass = new \ReflectionClass($classPath);
+			$reader = Annotations::getReader();
+			foreach ($reflectionClass->getProperties() as $property) {
+				$propertyAnnotation = $reader->getPropertyAnnotation($property, $annotationClass);
+				if ($propertyAnnotation !== NULL) {
+					$propertyName = $property->getName();
+					$propertyType = $metadata->getTypeOfField($propertyName);
+					if ($propertyType === NULL) {
+						$mapping = $metadata->getAssociationMapping($propertyName);
+						$propertyType = $mapping['targetEntity'];
+					}
+					$properties[$propertyName] = $propertyType;
+				}
+			}
+			Cache::setAsObject($cacheKey, $properties);
+		}
+
+		return Cache::getAsObject($cacheKey);
+	}
 }

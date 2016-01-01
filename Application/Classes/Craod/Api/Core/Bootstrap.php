@@ -18,6 +18,7 @@ class Bootstrap {
 	const CONFIGURATION = Utility\Settings::class;
 	const ANNOTATIONS = Utility\Annotations::class;
 	const SEARCH = Utility\Search::class;
+	const STORAGE = Utility\Storage::class;
 
 	const ROOT_PATH = __DIR__  . '/../../../../';
 
