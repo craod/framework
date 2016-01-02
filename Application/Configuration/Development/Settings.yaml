@@ -5,6 +5,11 @@ Craod:
     rest:
       settings:
         mode: 'development'
+        debug: false
+        exposed:
+          context: 'development'
+          storage:
+            location: 'https://craod-public.s3.amazonaws.com/development'
     cli:
       # Fixtures should only be available in the development and staging environments
       commands:
@@ -13,3 +18,7 @@ Craod:
         - 'Craod\Api\Cli\Command\Fixture\ListCommand'
       fixtures:
         user: 'Craod\Api\Cli\Fixture\UserFixture'
+    storage:
+      cloudFront:
+        domain: 'dmburp66piw2u.cloudfront.net'
+        keyPair: 'APKAJZB7AYBN5KKZTWCA'

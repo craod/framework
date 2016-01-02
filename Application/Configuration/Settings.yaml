@@ -36,15 +36,15 @@ Craod:
       onlineThreshold: '-5 minutes'
     storage:
       settings:
-        bucket: 'craod'
+        buckets:
+          public: 'craod-public'
+          protected: 'craod-content'
         endpoint: 's3.amazonaws.com'
         accessKey: 'AKIAIWM4NXNCSMZIZAPQ'
         secretKey: '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'
     rest:
       settings:
         debug: false
-        exposed:
-          one: 'two'
     cli:
       commands:
         available:

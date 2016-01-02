@@ -5,6 +5,7 @@ namespace Craod\Api\Model;
 use Craod\Api\Rest\Annotation as Craod;
 use Craod\Api\Utility\Settings;
 
+use Craod\Api\Utility\Storage;
 use Doctrine\ORM\Mapping as ORM;
 
 use Cpliakas\Password\Password;

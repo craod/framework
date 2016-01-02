@@ -5,6 +5,11 @@ Craod:
     rest:
       settings:
         mode: 'staging'
+        debug: false
+        exposed:
+          context: 'staging'
+          storage:
+            location: 'https://craod-public.s3.amazonaws.com/staging'
     cli:
       # Fixtures should only be available in the development and staging environments
       commands:

@@ -1,6 +1,9 @@
 <?php
 
 namespace Craod\Api\Utility;
+use Craod\Api\Core\Application;
+use Craod\Api\Core\Bootstrap;
+use Craod\Api\Rest\Exception\AuthenticationException;
 
 /**
  * The S3 utility
@@ -9,15 +12,25 @@ namespace Craod\Api\Utility;
  */
 class Storage implements AbstractUtility {
 
+	const ACCESS_PUBLIC = 'public';
+	const ACCESS_PROTECTED = 'protected';
+
 	/**
-	 * @var string
+	 *
+	 *
+	 * @var array
 	 */
-	protected static $bucketName;
+	protected static $buckets;
 
 	/**
 	 * @var string
 	 */
 	protected static $endpoint;
+
+	/**
+	 * @var array
+	 */
+	protected static $cloudFrontSettings;
 
 	/**
 	 * The S3 class used to communicate with and edit the S3 instance
@@ -33,7 +46,8 @@ class Storage implements AbstractUtility {
 	 */
 	public static function initialize() {
 		$settings = Settings::get('Craod.Api.storage.settings');
-		self::$bucketName = $settings['bucket'];
+		self::$cloudFrontSettings = Settings::get('Craod.Api.storage.cloudFront');
+		self::$buckets = $settings['buckets'];
 		self::$endpoint = $settings['endpoint'];
 		self::$s3 = new \S3($settings['accessKey'], $settings['secretKey'], TRUE, self::$endpoint);
 	}
@@ -59,22 +73,70 @@ class Storage implements AbstractUtility {
 	}
 
 	/**
-	 * Returns a URL that can be used to retrieve the file publicly (does not check for existence, however)
+	 * Gets the public URL for the given file path - that is to say, gets the url that will retrieve the file in the given path assuming
+	 * it has been stored publicly
 	 *
 	 * @param string $filePath
 	 * @return string
 	 */
 	public static function getPublicUrl($filePath) {
-		return 'https://' . self::$bucketName . '.' . self::$endpoint . '/' . $filePath;
+		return 'https://' . self::$buckets[self::ACCESS_PUBLIC] . '.' . self::$endpoint . '/' . Bootstrap::getContext() . '/' . $filePath;
 	}
 
 	/**
-	 * Checks whether the file exists in the path given in S3
+	 * Returns a signed URL that can be used to retrieve the file publicly (does not check for existence, however)
 	 *
 	 * @param string $filePath
+	 * @param integer $timeout
+	 * @return string
+	 * @throws AuthenticationException
+	 */
+	public static function getSignedUrl($filePath, $timeout = 300) {
+		$keyPairId = self::$cloudFrontSettings['keyPair'];
+		$domain = self::$cloudFrontSettings['domain'];
+		$resource = 'https://' . $domain . '/' . $filePath;
+
+		$ipAddress = $_SERVER['REMOTE_ADDR'] . '/32';
+		$expires = time() + $timeout;
+		$statement = [
+			'Statement' => [
+		        [
+			        'Resource' => $resource,
+			        'Condition' => [
+				        'IpAddress' => ['AWS:SourceIp' => $ipAddress],
+				        'DateLessThan' => ['AWS:EpochTime' => $expires]
+			        ]
+		        ]
+			]
+		];
+
+		if (Bootstrap::getContext() !== Application::PRODUCTION) {
+			unset ($statement['Statement'][0]['Condition']['IpAddress']);
+		}
+
+		$key = openssl_get_privatekey(file_get_contents(Bootstrap::ROOT_PATH . 'Authentication/pk-' . $keyPairId . '.pem'));
+		if (!$key) {
+			throw new AuthenticationException('Unable to load private key', 1451707912);
+		}
+
+		if (!openssl_sign(json_encode($statement, JSON_UNESCAPED_SLASHES), $signedPolicy, $key, OPENSSL_ALGO_SHA1)) {
+			throw new AuthenticationException('Failed to sign policy: ' . openssl_error_string(), 1451707913);
+		}
+
+		$base64SignedPolicy = base64_encode($signedPolicy);
+		$signature = str_replace(['+','=','/'], ['-','_','~'], $base64SignedPolicy);
+
+		return $resource . '?Expires=' . $expires . '&Signature=' . $signature . '&Key-Pair-Id=' . $keyPairId;
+	}
+
+	/**
+	 * Checks whether the file exists in the path given in S3 in the given bucket
+	 *
+	 * @param string $filePath
+	 * @param string $bucket
 	 * @return boolean
 	 */
-	public static function fileExists($filePath) {
-		return (self::$s3->getObjectInfo(self::$bucketName, $filePath) !== FALSE);
+	public static function fileExists($filePath, $bucket = self::ACCESS_PUBLIC) {
+		return (self::$s3->getObjectInfo(self::$buckets[$bucket], Bootstrap::getContext() . '/' . $filePath) !== FALSE);
 	}
 }
