@@ -2,9 +2,9 @@
 
 namespace Craod\Core\Utility;
 
-use Craod\Core\Core\Bootstrap;
-
+use Craod\Core\Bootstrap;
 use Craod\Core\Exception\InvalidSettingsBundleException;
+
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -14,8 +14,12 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Settings {
 
-	const SETTINGS_ROOT_PATH = Bootstrap::ROOT_PATH . 'Configuration/';
 	const DEFAULT_BUNDLE = 'Settings';
+
+	/**
+	 * @var string
+	 */
+	protected static $settingsRootPath;
 
 	/**
 	 * The actual settings
@@ -30,6 +34,7 @@ class Settings {
 	 * @return void
 	 */
 	public static function initialize() {
+		self::$settingsRootPath = Bootstrap::getRootPath() . 'Configuration/';
 		self::$settings = [];
 		self::loadBundle(self::DEFAULT_BUNDLE);
 	}
@@ -69,7 +74,7 @@ class Settings {
 	 * @return void
 	 */
 	public static function parseForBundle($bundle) {
-		$pattern = realpath(self::SETTINGS_ROOT_PATH) . '/{,' . ucfirst(Bootstrap::getContext()) . '/}' . $bundle . '{,.*}.yaml';
+		$pattern = realpath(self::$settingsRootPath) . '/{,' . ucfirst(Bootstrap::getContext()) . '/}' . $bundle . '{,.*}.yaml';
 		foreach (glob($pattern, GLOB_BRACE) as $filename) {
 			self::loadFileIntoBundle($filename, $bundle);
 		}
@@ -154,5 +159,20 @@ class Settings {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getSettingsRootPath() {
+		return self::$settingsRootPath;
+	}
+
+	/**
+	 * @param string $settingsRootPath
+	 * @return void
+	 */
+	public static function setSettingsRootPath($settingsRootPath) {
+		self::$settingsRootPath = $settingsRootPath;
 	}
 }

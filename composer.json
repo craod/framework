@@ -1,6 +1,6 @@
 {
 	"name": "craod/bootstrap-utilities",
-	"version": "v1.0.0-rc.1",
+	"version": "v1.0.0-rc.2",
 	"license": "MIT",
 	"type": "library",
 	"description": "Bootstrapper and utilities for Craod API",
@@ -42,5 +42,8 @@
 		"phpmailer/phpmailer": "~5.2",
 		"league/oauth2-client": "1.1.*",
 		"league/oauth2-google": "1.0.*"
+	},
+	"config": {
+		"vendor-dir": "Vendor"
 	}
 }
