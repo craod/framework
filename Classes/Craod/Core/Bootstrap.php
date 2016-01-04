@@ -93,7 +93,6 @@ class Bootstrap {
 	 */
 	public static function initializeClassLoader() {
 		error_reporting(E_ALL);
-		require_once self::$rootPath . 'Vendor/autoload.php';
 		self::$classLoader = new Psr4ClassLoader();
 		self::$classLoader->addPrefix('Craod', self::$rootPath . 'Classes/Craod');
 		self::$classLoader->register();
