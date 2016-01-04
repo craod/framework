@@ -1,4 +1,0 @@
-name: 'Craod database migrations'
-migrations_namespace: 'Migrations'
-table_name: 'doctrine_migration_versions'
-migrations_directory: 'Application/Migrations'

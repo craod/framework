@@ -1,5 +1,0 @@
-'/v1/settings':
-  controller: 'Craod\Api\Rest\Controller\GlobalController'
-  routes:
-    '':
-      get: 'getSettings'

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="PostgreSQL - craod@api.craod.dev" uuid="978447c1-ccda-4878-8d77-6a42e15e0209">
+      <secret-storage>master_key</secret-storage>
+      <user-name>craod</user-name>
+      <schema-pattern>craod.pg_catalog craod.public</schema-pattern>
+      <default-schemas>craod.public</default-schemas>
+    </data-source>
+  </component>
+</project>
