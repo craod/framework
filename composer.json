@@ -1,6 +1,6 @@
 {
 	"name": "craod/bootstrap-utilities",
-	"version": "1.0.0",
+	"version": "v1.0.0-rc1",
 	"license": "MIT",
 	"type": "library",
 	"description": "Bootstrapper and utilities for Craod API",

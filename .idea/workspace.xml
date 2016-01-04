@@ -2,115 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4f410413-a9cb-4de6-a5fa-3ecefd4823ee" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Cli.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Cache/FlushCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Data/User/InstallCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Fixture/AbstractFixtureCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Fixture/DownCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Fixture/ListCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Fixture/UpCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Search/Index/CreateCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Command/Search/Index/DeleteCommand.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Fixture/AbstractFixture.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Fixture/CategoryFixture.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Cli/Fixture/UserFixture.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Core/Application.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Core/Bootstrap.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/Exception.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/InvalidCommandException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/InvalidCriteriaException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/InvalidFixtureException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/InvalidModelException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/InvalidSettingsBundleException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/MailSendingException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/ModelNotSearchableException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/ProtectedAccessException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Exception/UtilityInitializationException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Model/AbstractEntity.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Model/Category.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Model/SearchableEntity.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Model/User.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/ORM/UuidGenerator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Object/ObjectAccessor.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Proxy/__CG__CraodApiModelUser.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Repository/AbstractRepository.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Repository/CategoryRepository.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Repository/SearchableRepository.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Repository/UserRepository.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/Api/Readable.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/Api/Searchable.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/Api/Writable.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/RequireRequestData.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/RequireRole.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/RequireUser.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Annotation/Validate.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Application.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Authentication/TokenGenerator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Controller/AbstractController.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Controller/CategoryController.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Controller/GlobalController.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Controller/UserController.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/AuthenticationException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/ControllerException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/Exception.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/InvalidActionException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/InvalidControllerException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/InvalidPropertyException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/InvalidTokenException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/NotFoundException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Exception/RequestDataException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/HttpStatusCodes.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Service/Crud.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Validator/AbstractControllerValidator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Validator/RequiredRequestDataValidator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Validator/RequiredRoleValidator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Rest/Validator/RequiredUserValidator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Search.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Storage.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Development/Settings.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Production/Settings.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Routes.Category.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Routes.Global.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Routes.User.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Settings.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Configuration/Staging/Settings.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Migrations/Version20151122000000.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/Migrations/Version20151122000001.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/api.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Application/cli" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/bootstrap.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/cache.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/cache/redis.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/database.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/database/elasticsearch.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/database/postgresql.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/framework.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/framework/craod.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/framework/slim.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/git.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/composer.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/environment.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/java.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/nginx.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/openssl.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Configuration/vagrant/server/php.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Vagrantfile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/composer.lock" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/migrations-db.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/migrations.yml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/AbstractUtility.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/AbstractUtility.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Annotations.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Annotations.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Arrays.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Arrays.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Cache.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Cache.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/CastingUtility.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/CastingUtility.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Database.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Database.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/File.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/File.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Mailer.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Mailer.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Password.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Password.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Application/Classes/Craod/Api/Utility/Settings.php" afterPath="$PROJECT_DIR$/Classes/Craod/Core/Utility/Settings.php" />
     </list>
     <ignored path="api.craod.com.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -184,18 +76,18 @@
       <file leaf-file-name="composer.json" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/composer.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0013698">
-              <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.06967213">
+              <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name=".token" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.token">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+              <caret line="0" column="40" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -258,8 +150,8 @@
         <option value="$PROJECT_DIR$/Application/Classes/Craod/Core/Application.php" />
         <option value="$PROJECT_DIR$/Classes/Craod/Core/Bootstrap.php" />
         <option value="$PROJECT_DIR$/composer2.json" />
-        <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/composer.json" />
       </list>
     </option>
   </component>
@@ -347,35 +239,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="api.craod.com">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="api.craod.com">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="Api">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -444,6 +307,35 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="api.craod.com">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="api.craod.com">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="Api">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -532,13 +424,13 @@
     <frame x="-8" y="-8" width="1616" height="916" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17609255" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17802057" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14460154" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30867347" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30867347" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -571,6 +463,22 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Classes/Craod/Core/Exception/UtilityInitializationException.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -657,13 +565,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.35112935">
           <caret line="188" column="9" selection-start-line="188" selection-start-column="9" selection-end-line="188" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.token">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="40" selection-start-line="0" selection-start-column="40" selection-end-line="0" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -788,10 +689,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../api.craod.com/Application/Vendor/symfony/class-loader/Psr4ClassLoader.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5931507">
+          <caret line="81" column="20" selection-start-line="81" selection-start-column="20" selection-end-line="81" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Classes/Craod/Core/Bootstrap.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+        <state vertical-scroll-proportion="-15.038462">
+          <caret line="92" column="7" selection-start-line="92" selection-start-column="7" selection-end-line="92" selection-end-column="7" />
           <folding>
             <element signature="e#30#64#0#PHP" expanded="true" />
           </folding>
@@ -800,16 +709,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.03307393">
+          <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.token">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+          <caret line="0" column="40" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0013698">
-          <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.06967213">
+          <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
           <folding />
         </state>
       </provider>
