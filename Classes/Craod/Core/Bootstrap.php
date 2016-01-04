@@ -87,14 +87,18 @@ class Bootstrap {
 	}
 
 	/**
-	 * Initialize the class loader - both ours and the composer one
+	 * Initialize the class loader
 	 *
 	 * @return void
 	 */
 	public static function initializeClassLoader() {
 		error_reporting(E_ALL);
 		self::$classLoader = new Psr4ClassLoader();
-		self::$classLoader->addPrefix('Craod', self::$rootPath . 'Classes/Craod');
+		foreach (glob(self::$rootPath . '/Classes/*') as $filePath) {
+			if (is_dir($filePath)) {
+				self::$classLoader->addPrefix(basename($filePath), $filePath);
+			}
+		}
 		self::$classLoader->register();
 	}
 

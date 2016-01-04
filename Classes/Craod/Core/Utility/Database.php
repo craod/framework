@@ -2,6 +2,8 @@
 
 namespace Craod\Core\Utility;
 
+use Craod\Core\Bootstrap;
+
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
@@ -29,6 +31,11 @@ class Database implements AbstractUtility {
 	protected static $modelProxyPath;
 
 	/**
+	 * @var string
+	 */
+	protected static $modelProxyNamespace;
+
+	/**
 	 * @var Connection
 	 */
 	protected static $connection;
@@ -52,10 +59,14 @@ class Database implements AbstractUtility {
 		$driver = new AnnotationDriver(new AnnotationReader(), [self::$modelPath]);
 		AnnotationRegistry::registerLoader('class_exists');
 
+		self::$modelPath = Bootstrap::getRootPath() . '/' . Settings::get('Craod.Core.Database.model.path');
+		self::$modelProxyPath = Bootstrap::getRootPath() . '/' . Settings::get('Craod.Core.Database.model.proxy.path');
+		self::$modelProxyNamespace = Settings::get('Craod.Core.Database.model.proxy.namespace');
+
 		$configuration = new Configuration();
 		$configuration->setMetadataDriverImpl($driver);
 		$configuration->setProxyDir(self::$modelProxyPath);
-		$configuration->setProxyNamespace('Craod\Core\Proxy');
+		$configuration->setProxyNamespace(self::$modelProxyNamespace);
 		$configuration->setAutoGenerateProxyClasses(TRUE);
 
 		if (Cache::isInitialized()) {
@@ -177,5 +188,20 @@ class Database implements AbstractUtility {
 	 */
 	public static function setModelProxyPath($modelProxyPath) {
 		self::$modelProxyPath = $modelProxyPath;
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getModelProxyNamespace() {
+		return self::$modelProxyNamespace;
+	}
+
+	/**
+	 * @param string $modelProxyNamespace
+	 * @return void
+	 */
+	public static function setModelProxyNamespace($modelProxyNamespace) {
+		self::$modelProxyNamespace = $modelProxyNamespace;
 	}
 }

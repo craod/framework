@@ -34,7 +34,7 @@ class Settings {
 	 * @return void
 	 */
 	public static function initialize() {
-		self::$settingsRootPath = Bootstrap::getRootPath() . 'Configuration/';
+		self::$settingsRootPath = Bootstrap::getRootPath() . '/Configuration/';
 		self::$settings = [];
 		self::loadBundle(self::DEFAULT_BUNDLE);
 	}
