@@ -21,16 +21,13 @@ abstract class AbstractEntity implements \JsonSerializable {
 	 * @ORM\Id
 	 * @ORM\Column(type="guid", unique=TRUE)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
-	 * @ORM\CustomIdGenerator(class="Craod\Api\Orm\UuidGenerator")
-	 * @Craod\Api\Readable
+	 * @ORM\CustomIdGenerator(class="Craod\Core\Orm\UuidGenerator")
 	 */
 	protected $guid;
 
 	/**
 	 * @var \DateTime
 	 * @ORM\Column(type="datetimetz")
-	 * @Craod\Api\Readable
-	 * @Craod\Api\Searchable
 	 */
 	protected $created;
 
