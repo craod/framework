@@ -44,7 +44,7 @@ class Application extends Slim implements CraodApplication {
 	 * Cli constructor
 	 */
 	public function __construct() {
-		parent::__construct(Settings::get('Craod.Api.Application.settings'));
+		parent::__construct(Settings::get('Craod.Core.Application.settings'));
 		self::$application = $this;
 		$this->initialize();
 	}
@@ -102,7 +102,7 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public function loadRoutes() {
 		$self = $this;
-		$routesBundle = Settings::get('Craod.Api.Application.routes.bundle', 'Routes');
+		$routesBundle = Settings::get('Craod.Core.Application.routes.bundle', 'Routes');
 		Settings::loadBundle($routesBundle);
 		self::$routeMap = Settings::getLoadedData($routesBundle);
 		foreach (self::$routeMap as $groupRoute => $groupData) {
@@ -136,7 +136,7 @@ class Application extends Slim implements CraodApplication {
 		} else {
 			$parameters = $parametersOrAction;
 		}
-		$actionMethodName = $parameters['action'] . Settings::get('Craod.Api.Application.controller.actionMethodSuffix', 'Action');
+		$actionMethodName = $parameters['action'] . Settings::get('Craod.Core.Application.controller.actionMethodSuffix', 'Action');
 		try {
 			$result = json_encode($this->executeControllerAction($controller, $actionMethodName, $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
 			$this->response->write($result);

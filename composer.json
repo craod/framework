@@ -1,9 +1,9 @@
 {
 	"name": "craod/framework",
-	"version": "v1.0.0-rc.9",
+	"version": "v1.0.0-rc.10",
 	"license": "MIT",
 	"type": "library",
-	"description": "Bootstrapper and utilities for Craod API",
+	"description": "The Craod REST and Cli microframework",
 	"keywords": [
 		"slim",
 		"doctrine",
@@ -17,9 +17,11 @@
 		"casting",
 		"utility",
 		"php",
-		"postgresql"
+		"postgresql",
+		"cli",
+		"rest"
 	],
-	"homepage": "https://github.com/craod/bootstrap-utilities",
+	"homepage": "https://github.com/craod/framework",
 	"autoload": {
 		"psr-4": {
 			"Craod\\Core\\": "Classes/Craod/Core"
