@@ -1,8 +1,9 @@
 <?php
 
-namespace Craod\Image\Orm;
+namespace Craod\Core\Orm;
 
 use Craod\Core\Model\AbstractEntity;
+
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\EntityManager;
 
@@ -10,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Extends v4 UUID generator by preventing uuid generation if a guid is already present
  *
- * @package Craod\Image\Doctrine\ORM
+ * @package Craod\Core\Doctrine\ORM
  */
 class UuidGenerator extends \Kiefernwald\DoctrineUuid\Doctrine\ORM\UuidGenerator {
 
