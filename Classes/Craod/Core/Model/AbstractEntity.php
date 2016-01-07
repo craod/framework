@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManager;
  * @package Craod\Core\Model
  * @ORM\MappedSuperclass
  */
-abstract class AbstractEntity implements \JsonSerializable {
+abstract class AbstractEntity {
 
 	/**
 	 * @var string

@@ -1,6 +1,6 @@
 {
 	"name": "craod/framework",
-	"version": "v1.0.0-rc.8",
+	"version": "v1.0.0-rc.9",
 	"license": "MIT",
 	"type": "library",
 	"description": "Bootstrapper and utilities for Craod API",
