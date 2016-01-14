@@ -160,7 +160,7 @@ class Application extends Slim implements CraodApplication {
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function executeControllerAction($controller, $actionMethodName, $arguments) {
+	public function executeControllerAction(AbstractController $controller, $actionMethodName, $arguments) {
 		$reader = Annotations::getReader();
 		$controllerReflection = new \ReflectionClass($controller);
 		$actionMethodReflection = $controllerReflection->getMethod($actionMethodName);

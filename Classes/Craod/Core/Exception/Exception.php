@@ -15,6 +15,23 @@ class Exception extends \Exception implements \JsonSerializable {
 	protected $data;
 
 	/**
+	 * Create an exception from an associative array
+	 *
+	 * @param array $exceptionArray
+	 * @return Exception
+	 */
+	public static function createFromAssociativeArray($exceptionArray) {
+		$exceptionClass = get_called_class();
+		$exception = new $exceptionClass();
+		foreach ($exceptionArray as $property => $value) {
+			if (property_exists($exception, $property)) {
+				$exception->{$property} = $value;
+			}
+		}
+		return $exception;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function jsonSerialize() {

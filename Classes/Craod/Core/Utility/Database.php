@@ -139,6 +139,8 @@ class Database implements AbstractUtility {
 		if (!isset(self::$tableNames[$classPath])) {
 			$reader = Annotations::getReader();
 			$reflectionClass = new \ReflectionClass($classPath);
+
+			/** @var Table $tableAnnotation */
 			$tableAnnotation = $reader->getClassAnnotation($reflectionClass, Table::class);
 			self::$tableNames[$classPath] = $tableAnnotation->name;
 			Cache::setAsObject('Database:tableNames', self::$tableNames);
