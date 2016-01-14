@@ -102,13 +102,13 @@ class Storage implements AbstractUtility {
 		$expires = time() + $timeout;
 		$statement = [
 			'Statement' => [
-		        [
-			        'Resource' => $resource,
-			        'Condition' => [
-				        'IpAddress' => ['AWS:SourceIp' => $ipAddress],
-				        'DateLessThan' => ['AWS:EpochTime' => $expires]
-			        ]
-		        ]
+				[
+					'Resource' => $resource,
+					'Condition' => [
+						'IpAddress' => ['AWS:SourceIp' => $ipAddress],
+						'DateLessThan' => ['AWS:EpochTime' => $expires]
+					]
+				]
 			]
 		];
 
@@ -143,11 +143,35 @@ class Storage implements AbstractUtility {
 	 */
 	public static function copyFileToBucket($filePath, $destinationUri, $bucket = self::ACCESS_PUBLIC) {
 		try {
+			$acl = ($bucket === self::ACCESS_PUBLIC ? \S3::ACL_PUBLIC_READ : \S3::ACL_PRIVATE);
 			$resource = Bootstrap::getContext() . '/' . $destinationUri;
-			$response = self::$s3->putObjectFile($filePath, self::$buckets[$bucket], $resource);
+			$response = self::$s3->putObjectFile($filePath, self::$buckets[$bucket], $resource, $acl);
 		} catch (\Exception $exception) {
 			if (strpos($exception->getMessage(), 'AccessDenied') !== FALSE) {
 				throw new AuthenticationException('Access denied to the S3 service', 1452576492);
+			} else {
+				throw $exception;
+			}
+		}
+		return $response;
+	}
+
+	/**
+	 * Delete the file given from the destination URI in the desired bucket
+	 *
+	 * @param string $destinationUri
+	 * @param string $bucket
+	 * @return boolean
+	 * @throws AuthenticationException
+	 * @throws \Exception
+	 */
+	public static function deleteFileFromBucket($destinationUri, $bucket = self::ACCESS_PUBLIC) {
+		try {
+			$resource = Bootstrap::getContext() . '/' . $destinationUri;
+			$response = self::$s3->deleteObject(self::$buckets[$bucket], $resource);
+		} catch (\Exception $exception) {
+			if (strpos($exception->getMessage(), 'AccessDenied') !== FALSE) {
+				throw new AuthenticationException('Access denied to the S3 service', 1452576493);
 			} else {
 				throw $exception;
 			}
