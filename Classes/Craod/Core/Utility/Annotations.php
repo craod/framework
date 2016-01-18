@@ -83,6 +83,9 @@ class Annotations implements AbstractUtility {
 					if ($propertyType === NULL) {
 						$mapping = $metadata->getAssociationMapping($propertyName);
 						$propertyType = $mapping['targetEntity'];
+						if ($metadata->isCollectionValuedAssociation($propertyName)) {
+							$propertyType = 'Collection<' . $propertyType . '>';
+						}
 					}
 					$properties[$propertyName] = $propertyType;
 				}

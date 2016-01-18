@@ -1,6 +1,6 @@
 {
 	"name": "craod/framework",
-	"version": "v1.0.0-rc.13",
+	"version": "v1.0.0-rc.14",
 	"license": "MIT",
 	"type": "library",
 	"description": "The Craod REST and Cli microframework",
