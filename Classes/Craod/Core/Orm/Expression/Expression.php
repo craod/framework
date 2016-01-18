@@ -14,12 +14,12 @@ class Expression {
 	 *
 	 * ['filters' => ['parents' => Expression::contains($parentToGetChildrenFrom)]]
 	 *
-	 * @param $expression
+	 * @param $value
 	 * @return ContainedExpression
 	 */
-	public static function contains($expression) {
+	public static function contains($value) {
 		$containedExpression = new ContainedExpression();
-		$containedExpression->expression = $expression;
+		$containedExpression->value = $value;
 		return $containedExpression;
 	}
 }

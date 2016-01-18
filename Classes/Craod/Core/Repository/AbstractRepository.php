@@ -36,7 +36,11 @@ abstract class AbstractRepository extends EntityRepository {
 		$queryBuilder->select('COUNT(entity)');
 		$index = 0;
 		foreach ($criteria as $parentProperty => $value) {
-			$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
+			if (isset($this->_class->fieldMappings[$parentProperty])) {
+				$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
+			} else {
+				$parentPropertyType = NULL;
+			}
 			if (is_array($value)) {
 				if ($parentPropertyType['type'] !== 'jsonb') {
 					throw new QueryException('Cannot do jsonb search inside property that is not of jsonb type: ' . $parentProperty, 1448919557);
@@ -48,11 +52,13 @@ abstract class AbstractRepository extends EntityRepository {
 				}
 			} else {
 				if ($value instanceof ContainedExpression) {
-					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $value->expression);
+					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $parentProperty);
+					$queryBuilder->setParameter('property' . $index, $value->value);
 				} else {
 					$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
+					$queryBuilder->setParameter('property' . $index, $value);
 				}
-				$queryBuilder->setParameter('property' . $index, $value);
+				$index++;
 			}
 		}
 		return $queryBuilder->getQuery()->getSingleScalarResult();
@@ -129,7 +135,11 @@ abstract class AbstractRepository extends EntityRepository {
 		$queryBuilder = $this->createQueryBuilder('entity');
 		$index = 0;
 		foreach ($criteria as $parentProperty => $value) {
-			$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
+			if (isset($this->_class->fieldMappings[$parentProperty])) {
+				$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
+			} else {
+				$parentPropertyType = NULL;
+			}
 			if (is_array($value)) {
 				if ($parentPropertyType['type'] !== 'jsonb') {
 					throw new QueryException('Cannot do jsonb search inside property that is not of jsonb type: ' . $parentProperty, 1448919557);
@@ -141,11 +151,12 @@ abstract class AbstractRepository extends EntityRepository {
 				}
 			} else {
 				if ($value instanceof ContainedExpression) {
-					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $value->expression);
+					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $parentProperty);
+					$queryBuilder->setParameter('property' . $index, $value->value);
 				} else {
 					$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
+					$queryBuilder->setParameter('property' . $index, $value);
 				}
-				$queryBuilder->setParameter('property' . $index, $value);
 				$index++;
 			}
 		}

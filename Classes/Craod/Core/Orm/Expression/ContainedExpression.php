@@ -12,7 +12,7 @@ final class ContainedExpression {
 	/**
 	 * The right hand side of a MEMBER OF relationship
 	 *
-	 * @var string
+	 * @var mixed
 	 */
-	public $expression;
+	public $value;
 }
