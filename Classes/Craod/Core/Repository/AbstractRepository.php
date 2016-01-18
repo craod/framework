@@ -2,6 +2,8 @@
 
 namespace Craod\Core\Repository;
 
+use Craod\Core\Orm\Expression\ContainedExpression;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\QueryException;
@@ -45,9 +47,12 @@ abstract class AbstractRepository extends EntityRepository {
 					$index++;
 				}
 			} else {
-				$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
+				if ($value instanceof ContainedExpression) {
+					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $value->expression);
+				} else {
+					$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
+				}
 				$queryBuilder->setParameter('property' . $index, $value);
-				$index++;
 			}
 		}
 		return $queryBuilder->getQuery()->getSingleScalarResult();
@@ -121,52 +126,46 @@ abstract class AbstractRepository extends EntityRepository {
 	 * @throws QueryException
 	 */
 	public function findBy(array $criteria, array $orderBy = NULL, $limit = NULL, $offset = NULL) {
-		$hasArrays = FALSE;
-		foreach ($criteria as $index => $value) {
+		$queryBuilder = $this->createQueryBuilder('entity');
+		$index = 0;
+		foreach ($criteria as $parentProperty => $value) {
+			$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
 			if (is_array($value)) {
-				$hasArrays = TRUE;
-			}
-		}
-		if ($hasArrays !== FALSE) {
-			return parent::findBy($criteria, $orderBy, $limit, $offset);
-		} else {
-			$queryBuilder = $this->createQueryBuilder('entity');
-			$index = 0;
-			foreach ($criteria as $parentProperty => $value) {
-				$parentPropertyType = $this->_class->fieldMappings[$parentProperty];
-				if (is_array($value)) {
-					if ($parentPropertyType['type'] !== 'jsonb') {
-						throw new QueryException('Cannot do jsonb search inside property that is not of jsonb type: ' . $parentProperty, 1448919557);
-					}
-					foreach ($value as $property => $propertyValue) {
-						$queryBuilder->andWhere('GET_JSON_FIELD(entity.' . $parentProperty . ', \'' . $property . '\') = :property' . $index);
-						$queryBuilder->setParameter('property' . $index, $propertyValue);
-						$index++;
-					}
-				} else {
-					$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
-					$queryBuilder->setParameter('property' . $index, $value);
+				if ($parentPropertyType['type'] !== 'jsonb') {
+					throw new QueryException('Cannot do jsonb search inside property that is not of jsonb type: ' . $parentProperty, 1448919557);
+				}
+				foreach ($value as $property => $propertyValue) {
+					$queryBuilder->andWhere('GET_JSON_FIELD(entity.' . $parentProperty . ', \'' . $property . '\') = :property' . $index);
+					$queryBuilder->setParameter('property' . $index, $propertyValue);
 					$index++;
 				}
+			} else {
+				if ($value instanceof ContainedExpression) {
+					$queryBuilder->andWhere(':property' . $index . ' MEMBER OF entity.' . $value->expression);
+				} else {
+					$queryBuilder->andWhere('entity.' . $parentProperty . ' = :property' . $index);
+				}
+				$queryBuilder->setParameter('property' . $index, $value);
+				$index++;
 			}
-			if ($orderBy !== NULL) {
-				foreach ($orderBy as $value) {
-					$parts = explode(' ', $value);
-					if (count($parts) > 0) {
-						$queryBuilder->addOrderBy('entity.' . $parts[0], $parts[1]);
-					} else {
-						$queryBuilder->addOrderBy('entity.' . $value);
-					}
+		}
+		if ($orderBy !== NULL) {
+			foreach ($orderBy as $value) {
+				$parts = explode(' ', $value);
+				if (count($parts) > 0) {
+					$queryBuilder->addOrderBy('entity.' . $parts[0], $parts[1]);
+				} else {
+					$queryBuilder->addOrderBy('entity.' . $value);
 				}
 			}
-			if ($offset !== NULL) {
-				$queryBuilder->setFirstResult($offset);
-			}
-			if ($limit !== NULL) {
-				$queryBuilder->setMaxResults($limit);
-			}
-			return $queryBuilder->getQuery()->getResult();
 		}
+		if ($offset !== NULL) {
+			$queryBuilder->setFirstResult($offset);
+		}
+		if ($limit !== NULL) {
+			$queryBuilder->setMaxResults($limit);
+		}
+		return $queryBuilder->getQuery()->getResult();
 	}
 
 	/**
