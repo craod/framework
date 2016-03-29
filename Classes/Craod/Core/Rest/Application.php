@@ -5,6 +5,7 @@ namespace Craod\Core\Rest;
 use Craod\Core\Application as CraodApplication;
 use Craod\Core\Bootstrap;
 use Craod\Core\Http\HttpStatusCodes;
+use Craod\Core\Rest\Annotation\Endpoint\Descriptor;
 use Craod\Core\Rest\Exception\Exception;
 use Craod\Core\Rest\Exception\InvalidControllerException;
 use Craod\Core\Rest\Exception\InvalidActionException;
@@ -15,6 +16,7 @@ use Craod\Core\Rest\Controller\AbstractController;
 use Craod\Core\Rest\Exception\NotFoundException;
 use Craod\Core\Rest\Validator\AbstractControllerValidator;
 use Craod\Core\Utility\Annotations;
+use Craod\Core\Utility\Cache;
 use Craod\Core\Utility\Settings;
 
 use Slim\Slim;
@@ -59,7 +61,7 @@ class Application extends Slim implements CraodApplication {
 		$this->error([$this, 'handleError']);
 		$this->notFound([$this, 'handleNotFound']);
 		$this->addCorsSupport();
-		$this->loadRoutes();
+		$this->mapRoutes();
 	}
 
 	/**
@@ -96,36 +98,58 @@ class Application extends Slim implements CraodApplication {
 	}
 
 	/**
-	 * Load the routes using the Settings utility
+	 * Load the route settings and organize them into a schema that can be cached
+	 *
+	 * @throws \Craod\Core\Exception\InvalidSettingsBundleException
+	 */
+	public function loadEndpointSchema() {
+		$cacheKey = self::class . ':endpointSchema';
+		if (!Cache::has($cacheKey)) {
+			$routesBundle = Settings::get('Craod.Core.Application.routes.bundle', 'Routes');
+			Settings::loadBundle($routesBundle);
+			$rawRouteMap = Settings::getLoadedData($routesBundle);
+			$endpointSchema = [];
+			foreach ($rawRouteMap as $groupRoute => $groupData) {
+				$controllerClassPath = $groupData['controller'];
+				$reflectionClass = new \ReflectionClass($controllerClassPath);
+				$endpointSchema[$controllerClassPath] = [];
+				foreach ($groupData['routes'] as $partialRoute => $actions) {
+					$route = $groupRoute . $partialRoute;
+					foreach ($actions as $method => $action) {
+						$endpointSchema[$controllerClassPath][$action] = [
+							'route' => $route,
+							'method' => $method
+						];
+
+						$reflectionMethod = $reflectionClass->getMethod($this->getActionMethodName($action));
+						foreach (Annotations::getReader()->getMethodAnnotations($reflectionMethod) as $annotation) {
+							if ($annotation instanceof Descriptor) {
+								$endpointSchema[$controllerClassPath][$action][$annotation->property] = TRUE;
+							}
+						}
+					}
+				}
+			}
+
+			Cache::setAsObject($cacheKey, $endpointSchema);
+		}
+
+		self::$endpointSchema = Cache::getAsObject($cacheKey);
+	}
+
+	/**
+	 * Map the routes using the endpoint schema
 	 *
 	 * @return void
 	 */
-	public function loadRoutes() {
+	public function mapRoutes() {
+		$this->loadEndpointSchema();
 		$self = $this;
-		$routesBundle = Settings::get('Craod.Core.Application.routes.bundle', 'Routes');
-		Settings::loadBundle($routesBundle);
-		$rawRouteMap = Settings::getLoadedData($routesBundle);
-		self::$endpointSchema = [];
-		foreach ($rawRouteMap as $groupRoute => $groupData) {
-			$controllerClassPath = $groupData['controller'];
-			$schemaObject = substr(array_pop(explode('\\', $controllerClassPath)), 0, -10);
-			self::$endpointSchema[$schemaObject] = [];
-			foreach ($groupData['routes'] as $partialRoute => $actions) {
-				$route = $groupRoute . $partialRoute;
-				foreach ($actions as $method => $parametersOrAction) {
-					if (is_string($parametersOrAction)) {
-						$parameters = ['action' => $parametersOrAction];
-					} else {
-						$parameters = $parametersOrAction;
-					}
-					self::$endpointSchema[$schemaObject][$parameters['action']] = [
-						'route' => $route,
-						'method' => $method
-					];
-					$this->map($route, function () use ($self, $route, $controllerClassPath, $parameters) {
-						$self->handleRoute($controllerClassPath, $parameters, func_get_args());
-					})->via(strtoupper($method));
-				}
+		foreach (self::$endpointSchema as $controllerClassPath => $actions) {
+			foreach ($actions as $action => $actionInformation) {
+				$this->map($actionInformation['route'], function () use ($self, $controllerClassPath, $action, $actionInformation) {
+					$self->handleRoute($controllerClassPath, ['action' => $action], func_get_args());
+				})->via(strtoupper($actionInformation['method']));
 			}
 		}
 	}
@@ -143,7 +167,7 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public function handleRoute($controllerClassPath, $parameters, $arguments) {
 		$controller = $this->getController($controllerClassPath);
-		$actionMethodName = $parameters['action'] . Settings::get('Craod.Core.Application.controller.actionMethodSuffix', 'Action');
+		$actionMethodName = $this->getActionMethodName($parameters['action']);
 		try {
 			$result = json_encode($this->executeControllerAction($controller, $actionMethodName, $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
 			$this->response->write($result);
@@ -156,6 +180,16 @@ class Application extends Slim implements CraodApplication {
 				throw new Exception($exception);
 			}
 		}
+	}
+
+	/**
+	 * Given a controller action, return the actual method name
+	 *
+	 * @param string $action
+	 * @return string
+	 */
+	public function getActionMethodName($action) {
+		return $action . Settings::get('Craod.Core.Application.controller.actionMethodSuffix', 'Action');
 	}
 
 	/**
