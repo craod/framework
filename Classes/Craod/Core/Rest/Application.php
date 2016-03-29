@@ -34,11 +34,11 @@ class Application extends Slim implements CraodApplication {
 	protected static $application;
 
 	/**
-	 * The array of routes to their methods and controller actions
+	 * The array of controllers to the available methods, with their routes
 	 *
 	 * @var array
 	 */
-	protected static $routeMap;
+	protected static $endpointSchema;
 
 	/**
 	 * Cli constructor
@@ -104,14 +104,26 @@ class Application extends Slim implements CraodApplication {
 		$self = $this;
 		$routesBundle = Settings::get('Craod.Core.Application.routes.bundle', 'Routes');
 		Settings::loadBundle($routesBundle);
-		self::$routeMap = Settings::getLoadedData($routesBundle);
-		foreach (self::$routeMap as $groupRoute => $groupData) {
+		$rawRouteMap = Settings::getLoadedData($routesBundle);
+		self::$endpointSchema = [];
+		foreach ($rawRouteMap as $groupRoute => $groupData) {
 			$controllerClassPath = $groupData['controller'];
+			$schemaObject = substr(array_pop(explode('\\', $controllerClassPath)), 0, -10);
+			self::$endpointSchema[$schemaObject] = [];
 			foreach ($groupData['routes'] as $partialRoute => $actions) {
 				$route = $groupRoute . $partialRoute;
-				foreach ($actions as $method => $arguments) {
-					$this->map($route, function () use ($self, $route, $controllerClassPath, $arguments) {
-						$self->handleRoute($controllerClassPath, $arguments, func_get_args());
+				foreach ($actions as $method => $parametersOrAction) {
+					if (is_string($parametersOrAction)) {
+						$parameters = ['action' => $parametersOrAction];
+					} else {
+						$parameters = $parametersOrAction;
+					}
+					self::$endpointSchema[$schemaObject][$parameters['action']] = [
+						'route' => $route,
+						'method' => $method
+					];
+					$this->map($route, function () use ($self, $route, $controllerClassPath, $parameters) {
+						$self->handleRoute($controllerClassPath, $parameters, func_get_args());
 					})->via(strtoupper($method));
 				}
 			}
@@ -122,20 +134,15 @@ class Application extends Slim implements CraodApplication {
 	 * Handle a route by instantiating a controller and executing the necessary action
 	 *
 	 * @param string $controllerClassPath
-	 * @param array|string $parametersOrAction
+	 * @param array $parameters
 	 * @param array $arguments
 	 * @return void
 	 * @throws InvalidControllerException
 	 * @throws InvalidActionException
 	 * @throws Exception
 	 */
-	public function handleRoute($controllerClassPath, $parametersOrAction, $arguments) {
+	public function handleRoute($controllerClassPath, $parameters, $arguments) {
 		$controller = $this->getController($controllerClassPath);
-		if (is_string($parametersOrAction)) {
-			$parameters = ['action' => $parametersOrAction];
-		} else {
-			$parameters = $parametersOrAction;
-		}
 		$actionMethodName = $parameters['action'] . Settings::get('Craod.Core.Application.controller.actionMethodSuffix', 'Action');
 		try {
 			$result = json_encode($this->executeControllerAction($controller, $actionMethodName, $arguments), JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
@@ -207,5 +214,12 @@ class Application extends Slim implements CraodApplication {
 	 */
 	public static function getApplication() {
 		return self::$application;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getEndpointSchema() {
+		return self::$endpointSchema;
 	}
 }
